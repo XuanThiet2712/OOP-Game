@@ -8,7 +8,7 @@ class NguoiRom{
 	float giap ; 
 public :
 	//constructor
-	NguoiRom(int _hp = 1000 , float _giap = 0.2f){
+	NguoiRom(int _hp = 1000 , float _giap = 0.0f){
 		hp = _hp ; 
 		giap = _giap ; 
 	}
