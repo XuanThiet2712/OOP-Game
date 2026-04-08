@@ -1,8 +1,9 @@
-//#pragma once 
+#pragma once 
 #include <iostream>
 #include <iomanip>
 #include <cmath>
 using namespace std ; 
+
 class VuKhi{
 private:
 	string tenVuKhi ; 
@@ -10,7 +11,7 @@ private:
 	float tocDoRaDon ; 
 public : 
 	//constructor 
-	VuKhi(string ten = "Khong ro" , int st = 10 , float td = 1 ){
+	VuKhi(string ten = "Chua co" , int st = 0 , float td = 0 ){
 		tenVuKhi = ten ; 
 		satThuongCoBan = st ; 
 		tocDoRaDon = td  ; 
@@ -36,7 +37,3 @@ public :
 	virtual int SatThuong(int t) = 0 ;
 };
 
-
-int main(){
-	
-}
