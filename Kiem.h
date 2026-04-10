@@ -72,6 +72,20 @@ class Kiem : public VuKhi {
 
             return tongDamage;
         }
+        //Xuất thông tin
+        friend ostream& operator<<(ostream& os, const Kiem& km) {
+            os << "===== KIEM =====\n";
+            os << setw(20) << left << "Ten:" << km.tenVuKhi << endl;
+            os << setw(20) << left << "Sat thuong:" << km.satThuongCoBan << endl;
+            os << setw(20) << left << "Toc do:" << km.tocDoRaDon << " don/s\n";
+            os << setw(20) << left << "Do ben:" << km.doBen << "/100";
+
+            if (km.doBen <= 0) os << " [GAY!]";
+            else if (km.doBen < 30) os << " [THAP]";
+
+            os << endl;
+            return os;
+        }
         
     
 };
