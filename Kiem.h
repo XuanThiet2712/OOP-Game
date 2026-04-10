@@ -92,8 +92,27 @@ class Kiem : public VuKhi {
             is >> km.doBen;
             return is;
         }
-        
-    
+        //Override dùng chung
+        void xuatThongTin(ostream& os) override {
+            os << *this;
+        }
+
+        int nhapVaTanCong(istream& is) override {
+            if (doBen < 100) {
+                cout << "Do ben: " << doBen << "/100. Mai kiem? (1.Co / 2.Khong): ";
+                int chon;
+                is >> chon;
+                if (chon == 1) MaiKiem();
+            }
+
+            if (doBen <= 0) return 0;
+
+            int t;
+            cout << "Nhap thoi gian tan cong (giay): ";
+            is >> t;
+
+            return SatThuong(t);
+    }
 };
 
 
