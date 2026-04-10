@@ -18,6 +18,13 @@ class Kiem : public VuKhi {
         }
         //Hàm hủy
         ~Kiem() {}
+        //Getter / Setter
+        float getDoBen() { return doBen; }
+        void setDoBen(float db) {
+            if (db >= 0 && db <= 100)
+                doBen = db;
+        }
+    
         
     
 }
