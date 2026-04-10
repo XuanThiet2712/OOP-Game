@@ -86,6 +86,12 @@ class Kiem : public VuKhi {
             os << endl;
             return os;
         }
+        //Nhập thông tin
+        friend istream& operator>>(istream& is, Kiem& km) {
+            cout << "Nhap do ben: ";
+            is >> km.doBen;
+            return is;
+        }
         
     
 };
