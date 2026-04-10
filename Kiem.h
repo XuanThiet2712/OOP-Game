@@ -112,7 +112,7 @@ class Kiem : public VuKhi {
             is >> t;
 
             return SatThuong(t);
-    }
+        }
 };
 
 
