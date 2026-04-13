@@ -1,9 +1,9 @@
 #include <iostream>
 using namespace std;
 #include "VuKhi.h"
-#include "Sung.h"
+//#include "Sung.h"
 #include "Kiem.h"
-#include "PhepThuat.h"
+//#include "PhepThuat.h"
 #include "NguoiRom.h"
 
 int main() {
@@ -11,9 +11,9 @@ int main() {
 	cout << nr;
 	
 	// Khai bao 3 vu khi 
-	Sung		sung("AK47",35, 10, 30, 2);
+	//Sung		sung("AK47",35, 10, 30, 2);
 	Kiem		kiem("Kiem Rong",50, 2, 100);
-	PhepThuat	phep("Phep Thuat", 60,1,"Hoa", 10);
+	//PhepThuat	phep("Phep Thuat", 60,1,"Hoa", 10);
 	
 	VuKhi* vk[3] = { &sung, &kiem, &phep };
 	
@@ -41,7 +41,7 @@ int main() {
 			int damage = vk[idx]->SatThuong(t);			
 			if (damage > 0) {
 				nr.NhanSatThuong(damage);
-				if (nr.conSong())
+				//if (nr.conSong())
 					cout << ">> Nguoi rom van song! HP: " << nr.getHp() << endl;
 				else
 					cout << ">> Nguoi rom da bi ha guc!" << endl;

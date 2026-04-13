@@ -2,6 +2,7 @@
 #include<iostream>
 #include<iomanip>
 #include<string>
+#include<algorithm>
 #include "VuKhi.h"
 
 using namespace std;
@@ -11,7 +12,7 @@ class Kiem : public VuKhi {
     public:
         //Constructor
         Kiem() : VuKhi() {
-            doBen == 100.0;
+            doBen = 100.0;
         }
         Kiem (string ten, int st, float td, float db) : VuKhi(ten,st, td) {
             doBen = db;
@@ -74,7 +75,7 @@ class Kiem : public VuKhi {
         }
         //Xuất thông tin
         friend ostream& operator<<(ostream& os, const Kiem& km) {
-            os << "===== KIEM =====\n";
+            os << "===== THONG TIN KIEM =====\n";
             os << setw(20) << left << "Ten:" << km.tenVuKhi << endl;
             os << setw(20) << left << "Sat thuong:" << km.satThuongCoBan << endl;
             os << setw(20) << left << "Toc do:" << km.tocDoRaDon << " don/s\n";
