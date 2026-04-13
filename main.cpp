@@ -20,15 +20,15 @@ int main() {
 	// Gioi thieu vu khi
 	cout <<endl<<"===== Gioi Thieu Vu Khi =====" << endl;
 	for (int i = 0; i < 3; i++) {
-		cout << "[" << i+1 << "] "; b[i]->TanCong();
+		cout << "[" << i+1 << "] "; vk[i]->TanCong();
 	}
 	
 	int lua = -1, idx = 0;
 	
-	while (lua != 0 && nr.conSong()) {
+	while (lua != 0 && nr.ConSong()) {
 		cout << endl;
 		
-		cout << *vk[idx];
+//		cout << *vk[idx];
 		
 		cout << "1.Tan cong"<<endl;
 		cout << "2.Doi vu khi"<<endl;
@@ -41,7 +41,7 @@ int main() {
 			int damage = vk[idx]->SatThuong(t);			
 			if (damage > 0) {
 				nr.NhanSatThuong(damage);
-				if (nr.conSong())
+				if (nr.ConSong())
 					cout << ">> Nguoi rom van song! HP: " << nr.getHp() << endl;
 				else
 					cout << ">> Nguoi rom da bi ha guc!" << endl;
@@ -60,7 +60,7 @@ int main() {
 		else cout <<"Lua chon khong hop le , yeu cau nhap lai "<<endl;
 	}
 	
-	if (!nr.conSong()) {
+	if (!nr.ConSong()) {
 		cout <<endl << "=============================" << endl;
 		cout 		<< "  NGUOI ROM DA BI TIEU DIET! " << endl;
 		cout 		<< "=============================" << endl;
