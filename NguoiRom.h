@@ -35,12 +35,12 @@ public :
 
 void NguoiRom::NhanSatThuong(int st, float xg){
 	int damageThucTe = st * (giap - xg) ; 
-	cout << "[Phong thu muc tieu]" << endl;
-	cout << left << setw(30) << "  Giap ban dau: "   << (int)(giap * 100)       << "%" << endl;
-	cout << left << setw(30) << "  Giap sau xuyen: " << (int)(giap - xg) << "%" << endl;
-	cout << left << setw(30) << "  Giam boi giap: "  << st - damageThucTe   << endl;
-	cout << "[Sat thuong thuc te]" << endl;
-	cout << left << setw(30) << "  Damage gay len HP: " << damageThucTe << endl;
+//	cout << "[Phong thu muc tieu]" << endl;
+//	cout << left << setw(30) << "  Giap ban dau: "   << (int)(giap * 100)       << "%" << endl;
+//	cout << left << setw(30) << "  Giap sau xuyen: " << (int)(giap - xg) << "%" << endl;
+//	cout << left << setw(30) << "  Giam boi giap: "  << st - damageThucTe   << endl;
+//	cout << "[Sat thuong thuc te]" << endl;
+//	cout << left << setw(30) << "  Damage gay len HP: " << damageThucTe << endl;
 	int hpTruoc = hp;
 	hp -= damageThucTe;
 	if (hp < 0) hp = 0;
