@@ -48,7 +48,7 @@ void hienThiGiaoDien(NguoiRom& nr, VuKhi* vk[], int x, Sung& sung, Kiem& kiem, P
 }
 
 int main() {
-	NguoiRom nr(1000, 0.2f);
+	NguoiRom nr(10000, 0.2f);
 	
 	// Khai bao 3 vu khi 
 	Sung      sung("AK47", 35, 10, 30, 2);
@@ -120,6 +120,10 @@ int main() {
 				cin >> kiem;
 				x = 1;
 				break;
+			case 3:
+				cin >> phep;
+				x = 2 ; 
+				break ;
 			default:
 				break;
 			}
