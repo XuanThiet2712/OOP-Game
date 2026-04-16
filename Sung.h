@@ -19,7 +19,8 @@ public:
 	void TanCong() {
 		cout << "[SUNG "<<getTenVuKhi()<<"] Tan cong tam xa bang nhung vien dan chay bong"
 		<< " - " << getSatThuongCoBan() << " dmg/vien, "
-		<< getTocDoRaDon() << " dan/giay. Dan hien tai: " << soLuongDan << " vien." << endl;
+		<< getTocDoRaDon() << " dan/giay. ";
+		cout<<endl<<"	>> Dan hien tai: " << soLuongDan << " vien." << endl;
 	}
 	
 	int SatThuong(int t) {

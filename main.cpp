@@ -14,8 +14,8 @@ int main() {
 	Sung		sung("AK47",35, 10, 30, 2);
 	Kiem		kiem("Kiem Rong",50, 2, 100);
 	PhepThuat	phep("Phep Thuat", 60,1,"Hoa", 10);
-	
-	VuKhi* vk[3] = { &sung, &kiem, &phep };
+	 
+	VuKhi* vk[3] = { &sung, &kiem, &phep }; 
 	
 	// Gioi thieu vu khi
 	cout <<endl<<"===== Gioi Thieu Vu Khi =====" << endl;
@@ -87,7 +87,7 @@ int main() {
 			case 2:
 				cin >> kiem ;
 				x = 1 ; 
-				break;
+				break; 
 //			case 3:
 //				cin >> phep ; 
 //				x = 2 ; 

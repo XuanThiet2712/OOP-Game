@@ -11,7 +11,7 @@ class Kiem : public VuKhi {
         }
         Kiem (string ten, int st, float td, float db) : VuKhi(ten,st, td) {
             doBen = db;
-			doBenMax = doBen ; 
+			doBenMax = db ; 
         }
         //Hàm hủy
         ~Kiem() {}
@@ -28,15 +28,23 @@ class Kiem : public VuKhi {
 		}
 
         // Mô tả tấn công
-        void TanCong(){
-            cout << " [KIEM] " << getTenVuKhi()
-                 << " | ST: " << getSatThuongCoBan()
-                 << " | TD: " << getTocDoRaDon() << "don/s"
-                 << " | Do Ben:  " << doBen << "/100";
-            if (doBen <= 0) cout << "[GAY!]";
-            else if (doBen < 30) cout << "[THAP]";
-            cout << endl;
-        }
+//        void TanCong(){
+//            cout << " [KIEM] " << getTenVuKhi()
+//                 << " | ST: " << getSatThuongCoBan()
+//                 << " | TD: " << getTocDoRaDon() << "don/s"
+//                 << " | Do Ben:  " << doBen << "/100";
+//            if (doBen <= 0) cout << "[GAY!]";
+//            else if (doBen < 30) cout << "[THAP]";
+//            cout << endl;
+//        }
+	
+		void TanCong() {
+			cout << "[KIEM "<<getTenVuKhi()<<"] Tan cong tam gan bang nhung nhat chem sac ben"
+			<< " - " << getSatThuongCoBan() << " dmg/chem, "
+			<< getTocDoRaDon() << " chem/giay.";
+			cout<<endl<<"	>> Do ben hien tai : " << doBen << "/"<<doBenMax << endl;
+		}
+	
         //Tính sát thương
         int SatThuong(int t){
             if (doBen <= 0) {
