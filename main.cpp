@@ -120,6 +120,10 @@ int main() {
 				cin >> kiem;
 				x = 1;
 				break;
+			case 3:
+				cin >> phep;
+				x = 2;
+				break;
 			default:
 				break;
 			}
