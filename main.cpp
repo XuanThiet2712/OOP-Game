@@ -24,13 +24,13 @@ int main() {
 		cout <<endl ; 
 	}
 	
-	int lua = -1, idx = 0;
+	int lua = -1, x = 0;
 	
 	while (lua != 0 && nr.ConSong()) {
 		cout << endl;
 		
 //		cout << *vk[idx];
-		switch (idx) {
+		switch (x) {
 		case 0:
 			cout<<sung<<endl;
 			break;
@@ -44,7 +44,7 @@ int main() {
 			//TODO
 			break;
 		}
-		vk[idx]->TanCong();
+		vk[x]->TanCong();
 		cout<<endl;
 		cout << "1.Tan cong"<<endl;
 		cout << "2.Doi vu khi"<<endl;
@@ -55,7 +55,8 @@ int main() {
 		int t = 0 ; 
 		if (lua == 1) {
 			cout << "Nhap thoi gian tan cong (giay): "; cin >> t ; 
-			int damage = vk[idx]->SatThuong(t);	
+//			cout <<endl<< "[Dien bien chien dau - " << t << " giay]" << endl;
+			int damage = vk[x]->SatThuong(t);	
 			cout << "Sat thuong gay len nguoi rom : " <<damage <<endl ; 
 			if (damage > 0) {
 				cout<<endl;
@@ -71,22 +72,25 @@ int main() {
 			cout << "1.Sung --- 2.Kiem  --- 3.Phep Thuat"<<endl;
 			cout << "Lua chon : ";
 			int chon; cin >> chon;
-			if (chon >= 1 && chon <= 3) idx = chon - 1;
-			cout << ">> Da chon: "; vk[idx]->TanCong();
+			if (chon >= 1 && chon <= 3) x = chon - 1;
+			cout << ">> Da chon: "; vk[x]->TanCong();
 		}
 		else if (lua == 3) {
 			cout << "Chon vu khi ban muon che tao "<<endl ; 
 			cout << "1.Sung \n2.Kiem  \n3.Phep Thuat"<<endl;
 			int chon; cin >> chon;
-			switch (chon) {
+			switch (chon) { 
 			case 1:
 				cin >> sung ;
+				x = 0 ;
 				break;
-//			case 2:
-//				cin >> kiem ; 
-//				break;
+			case 2:
+				cin >> kiem ;
+				x = 1 ; 
+				break;
 //			case 3:
 //				cin >> phep ; 
+//				x = 2 ; 
 //				break;
 			default:
 //				cout << "Lua chon khong hop le !" <<endl;

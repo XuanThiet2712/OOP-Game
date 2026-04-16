@@ -1,31 +1,34 @@
 #include "VuKhi.h"
 class Kiem : public VuKhi {
     private: 
-        float doBen; // độ bền (0 - 100)
+        int doBen; // độ bền (0 - 100)
+		int doBenMax;
     public:
         //Constructor
         Kiem() : VuKhi() {
-            doBen = 100.0;
+            doBen = 100;
+			doBenMax = 100 ; 
         }
         Kiem (string ten, int st, float td, float db) : VuKhi(ten,st, td) {
             doBen = db;
+			doBenMax = doBen ; 
         }
         //Hàm hủy
         ~Kiem() {}
         //Getter / Setter
-        float getDoBen() { return doBen; }
-        void setDoBen(float db) {
+        int getDoBen() { return doBen; }
+        void setDoBen(int db) {
             if (db < 0) doBen = 0;
-            else if (db > 100) doBen = 100;
             else doBen = db;
         }
-        //Mài kiếm
-        void MaiKiem() {
-            doBen = 100;
-            cout << ">> Da mai kiem! Do ben = 100\n";
-        }
+		int getDoBenMax() { return doBen; }
+		void setDoBenMax(int db) {
+			if (db < 0) doBen = 0;
+			else doBen = db;
+		}
+
         // Mô tả tấn công
-        void TanCong() override {
+        void TanCong(){
             cout << " [KIEM] " << getTenVuKhi()
                  << " | ST: " << getSatThuongCoBan()
                  << " | TD: " << getTocDoRaDon() << "don/s"
@@ -35,7 +38,7 @@ class Kiem : public VuKhi {
             cout << endl;
         }
         //Tính sát thương
-        int SatThuong(int t) override {
+        int SatThuong(int t){
             if (doBen <= 0) {
                 cout << ">> Kiem da gay! Khong the tan cong!\n";
                 return 0;
@@ -46,34 +49,35 @@ class Kiem : public VuKhi {
 
             cout << ">> Tan cong trong " << t << " giay (" << tongDon << " don)\n";
 
-            for (int i = 0; i < tongDon; i++) {
-                if (doBen <= 0) break;
-                // hệ số độ bền (0.5 -> 1.0)
-                float heSoDoBen = 0.5f + (doBen / 100.0f) * 0.5f;
-
-                int damageMoiDon = (int)(getSatThuongCoBan() * heSoDoBen);
-
-                tongDamage += damageMoiDon;
-
-                // giảm độ bền mỗi đòn
-                doBen = max(0.0f, doBen - 0.7f);
-            }
+           for (int i = 0; i < tongDon; i++) {
+			   if (doBen <= 0) break;
+			   
+			   // hệ số theo độ bền (0 → 1)
+			   float heSoDoBen = doBen / (float)doBenMax;
+			   
+			   int damageMoiDon = (int)(getSatThuongCoBan() * heSoDoBen);
+			   
+			   tongDamage += damageMoiDon;
+			   
+			   // giảm 1 độ bền mỗi đòn
+			   doBen--;
+		   }
 
             cout << ">> Tong sat thuong: " << tongDamage << endl;
             cout << ">> Do ben con lai: " << doBen << "/100\n";
 
-            if (doBen <= 0) cout << ">> Kiem da gay! Can mai kiem.\n";
+            if (doBen <= 0) cout << ">> Kiem da gay! \n";
             else if (doBen < 30) cout << ">> Canh bao: Do ben thap!\n";
 
             return tongDamage;
         }
         //Xuất thông tin
-        friend ostream& operator<<(ostream& os, Kiem& km) {
-            os << "===== THONG TIN KIEM =====\n";
-            os << setw(20) << left << "Ten:" << km.getTenVuKhi() << endl;
+        friend ostream& operator<<(ostream& os, Kiem km) {
+            os << "Player dang su dung VU KHI: " ;
+            os <<"Kiem " << km.getTenVuKhi() << endl;
             os << setw(20) << left << "Sat thuong:" << km.getSatThuongCoBan() << endl;
             os << setw(20) << left << "Toc do:" << km.getTocDoRaDon() << " don/s\n";
-            os << setw(20) << left << "Do ben:" << km.doBen << "/100";
+            os << setw(20) << left << "Do ben:" << km.doBen <<"/"<<km.doBenMax<<endl;
 
             if (km.doBen <= 0) os << " [GAY!]";
             else if (km.doBen < 30) os << " [THAP]";
@@ -86,19 +90,21 @@ class Kiem : public VuKhi {
             string ten;
             int st;
             float td;
-            cout << "Nhap ten vu khi: ";
+			is.ignore();
+			cout << "===== VU KHI: KIEM =====" << endl;	
+            cout << "Nhap ten kiem : ";
             getline(is >> ws, ten);
-            cout << "Nhap sat thuong: ";
+            cout << "Nhap sat thuong moi don : ";
             is >> st;
-            cout << "Nhap toc do: ";
+            cout << "Nhap toc do ra don /1s : ";
             is >> td;
             km.setTenVuKhi(ten);
             km.setSatThuongCoBan(st);
             km.setTocDoRaDon(td);
-            cout << "Nhap do ben: ";
+            cout << "Nhap do ben : ";
             is >> km.doBen;
+			km.doBenMax = km.doBen ;
             if (km.doBen < 0) km.doBen = 0;
-            if (km.doBen > 0) km.doBen = 100;
             return is;
         }
         
