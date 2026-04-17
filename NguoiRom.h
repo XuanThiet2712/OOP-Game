@@ -33,8 +33,8 @@ public :
 	friend ostream& operator << (ostream& out , NguoiRom nr);
 };
 
-void NguoiRom::NhanSatThuong(int st, float xg){
-	int damageThucTe = st * (giap - xg) ; 
+void NguoiRom::NhanSatThuong(int st, float xg ){
+	int damageThucTe = st * (1 - (giap - xg));
 //	cout << "[Phong thu muc tieu]" << endl;
 //	cout << left << setw(30) << "  Giap ban dau: "   << (int)(giap * 100)       << "%" << endl;
 //	cout << left << setw(30) << "  Giap sau xuyen: " << (int)(giap - xg) << "%" << endl;

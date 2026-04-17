@@ -39,7 +39,7 @@ class Kiem : public VuKhi {
 //        }
 	
 		void TanCong() {
-			cout << "[KIEM "<<getTenVuKhi()<<"] Tan cong tam gan bang nhung nhat chem sac ben"
+			cout <<"[ KIEM ] [KIEM "<<getTenVuKhi()<<"] Tan cong tam gan bang nhung nhat chem sac ben"
 			<< " - " << getSatThuongCoBan() << " dmg/chem, "
 			<< getTocDoRaDon() << " chem/giay.";
 			cout<<endl<<"	>> Do ben hien tai : " << doBen << "/"<<doBenMax << endl;

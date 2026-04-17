@@ -18,15 +18,15 @@ void hienThiGiaoDien(NguoiRom& nr, VuKhi* vk[], int x, Sung& sung, Kiem& kiem, P
 	clearScreen();
 	
 	// Header - Muc tieu nguoi rom
-	cout << nr;
+	cout << nr; 
 	cout << endl;
 	
-	// Gioi thieu vu khi
+	// Gioi thieu vu khi 
 	cout << "PLAYER : SHADOW REAPER "<<endl;
-	cout << "KHO VU KHI PLAYER :" << endl;
+	cout << "TRANG BI HIEN TAI:" << endl;
 	for (int i = 0; i < 3; i++) {
 		cout << "[" << i+1 << "] "; vk[i]->TanCong();
-	}
+	} 
 	cout << endl;
 	
 	// Vu khi dang su dung
@@ -48,12 +48,12 @@ void hienThiGiaoDien(NguoiRom& nr, VuKhi* vk[], int x, Sung& sung, Kiem& kiem, P
 }
 
 int main() {
-	NguoiRom nr(10000, 0.2f);
+	NguoiRom nr(10000, 0);
 	
-	// Khai bao 3 vu khi 
+	// Khai bao 3 vu khi  
 	Sung      sung("AK47", 35, 10, 30, 2);
 	Kiem      kiem("Muramasa", 50, 2, 100);
-	PhepThuat phep("Phep Thuat", 60, 1, "Hoa", 10);
+	PhepThuat phep("Amaterasu", 60, 1, "Hoa", 10);
 	
 	VuKhi* vk[3] = { &sung, &kiem, &phep };
 	

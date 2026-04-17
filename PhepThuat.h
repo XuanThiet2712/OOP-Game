@@ -48,6 +48,7 @@ public:
 	// ===== SatThuong: xu ly toan bo logic trong t giay =====
 	// Moi giay = 1 don danh (tocDoRaDon = 1 don/giay)
 	int SatThuong(int t) override {
+		//lua chon 1 2 3 phep hoa bang gio 
 		int tongSatThuong = 0;
 		bool dangHoiMana  = false; // trang thai hoi mana
 		
