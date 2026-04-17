@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 using namespace std;
 #include "VuKhi.h"
 #include "Sung.h"
@@ -20,9 +21,7 @@ void hienThiGiaoDien(NhanVat& nr, NhanVat& p) {
 	cout << "========== MUC TIEU: " << nr.getName() << " ==========\n";
 	cout << nr  ; 
 	 
-	cout << "PLAYER : " << p.getName() 	<<"\n"; 
-	cout << "HP		: " << p.getHp()	<<"\n";
-	cout << "Mana   : " << p.getMana() 	<< "/" << p.getManaMax() << "\n";
+	cout << "PLAYER: " << p.getName()<< " | HP: " << p.getHp()<< " | Mana: " << p.getMana()<<"/"<< p.getManaMax()<< "\n";
 	cout << "TRANG BI HIEN TAI:\n";
 	p.trangBiHienTai();   //
 	cout << "\n";
@@ -59,8 +58,11 @@ int main() {
 			clearScreen();
 			cout << "========== MUC TIEU: " << nr.getName() << " ==========\n";
 			cout << nr;
-			cout << "========== PLAYER: " << player.getName() << " ==========\n";
-			cout << player ;
+//			cout << "========== PLAYER: " << player.getName() << " ==========\n";
+//			cout << player ;
+			cout << "PLAYER: " << player.getName()
+			<< " | HP: " 	<< player.getHp()
+			<< " | Mana: " 	<< player.getMana() << "/" << player.getManaMax() << "\n";
 			cout << "===== TAN CONG =====\n";
 			player[player.getViTriDangDung()]->TanCong();  
 			cout << "\nNhap thoi gian tan cong (giay): ";
@@ -124,7 +126,7 @@ int main() {
 			clearScreen();
 			cout << "Tam biet!\n";
 			return 0;
-		}
+		} 
 		else {
 			cout << "Lua chon khong hop le.\n";
 			cout << "Nhan Enter de tiep tuc...";

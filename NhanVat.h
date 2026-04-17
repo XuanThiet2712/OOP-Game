@@ -63,13 +63,7 @@ public:
 	}
 	
 	// Doi vu khi dang dung
-	void doiVuKhi(int slot) {
-		if (slot >= 0 && slot < 3 && vk[slot] != nullptr)
-			viTriDangDung = slot;
-		else
-			cout << ">> Slot khong hop le hoac chua co vu khi!" << endl;
-	}
-	
+
 	
 	// qua tai lay vu khi []
 	VuKhi*& operator[](int index) {
