@@ -100,14 +100,17 @@ public:
 		
 		return tongDamage;
 	}
+	void inThongTin(){
+		cout << "Player dang su dung VU KHI: " ;
+		cout << "Sung "				<< getTenVuKhi()			<< endl;
+		cout << left << setw(22) << "Sat thuong/vien:"	<< getSatThuongCoBan()	<< endl;
+		cout << left << setw(22) << "Toc do ban:"			<< getTocDoRaDon()		<< " dan/giay" << endl;
+		cout << left << setw(22) << "Dan con lai:"		<< soLuongDan			<< " vien" << endl;
+		cout << left << setw(22) << "Toc do thay bang:"	<< tocDoThayBang			<< " giay" << endl;
+	}
 	friend istream& operator >> (istream& is, Sung &sg);
 	friend ostream& operator << (ostream& os, Sung sg) {
-		os << "Player dang su dung VU KHI: " ;
-		os << "Sung "				<< sg.getTenVuKhi()			<< endl;
-		os << left << setw(22) << "Sat thuong/vien:"	<< sg.getSatThuongCoBan()	<< endl;
-		os << left << setw(22) << "Toc do ban:"			<< sg.getTocDoRaDon()		<< " dan/giay" << endl;
-		os << left << setw(22) << "Dan con lai:"		<< sg.soLuongDan			<< " vien" << endl;
-		os << left << setw(22) << "Toc do thay bang:"	<< sg.tocDoThayBang			<< " giay" << endl;
+		sg.inThongTin();
 		return os;
 	}
 };

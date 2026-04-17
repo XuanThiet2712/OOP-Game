@@ -35,5 +35,6 @@ public :
 	//method
 	virtual void TanCong() = 0 ;
 	virtual int SatThuong(int t) = 0 ;
+	virtual void inThongTin() = 0 ;
 };
 

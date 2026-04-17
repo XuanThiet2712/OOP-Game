@@ -4,7 +4,7 @@ using namespace std;
 #include "Sung.h"
 #include "Kiem.h"
 #include "PhepThuat.h"
-#include "NguoiRom.h"
+#include "NhanVat.h"
 
 void clearScreen() {
 #ifdef _WIN32
@@ -12,132 +12,121 @@ void clearScreen() {
 #else
 	system("clear");
 #endif
-}
-
-void hienThiGiaoDien(NguoiRom& nr, VuKhi* vk[], int x, Sung& sung, Kiem& kiem, PhepThuat& phep) {
-	clearScreen();
+} 
+  
+void hienThiGiaoDien(NhanVat& nr, NhanVat& p) {
+	clearScreen(); 
+	 
+	cout << "========== MUC TIEU: " << nr.getName() << " ==========\n";
+	cout << nr  ; 
+	 
+	cout << "PLAYER : " << p.getName() 	<<"\n"; 
+	cout << "HP		: " << p.getHp()	<<"\n";
+	cout << "Mana   : " << p.getMana() 	<< "/" << p.getManaMax() << "\n";
+	cout << "TRANG BI HIEN TAI:\n";
+	p.trangBiHienTai();   //
+	cout << "\n";
 	
-	// Header - Muc tieu nguoi romm
-	cout << nr; 
-	cout << endl;
+	cout << "===== Vu Khi Dang Su Dung =====\n";
+	p[p.getViTriDangDung()]->inThongTin();
+	cout << "\n";
 	
-	// Gioi thieu vu khi 
-	cout << "PLAYER : SHADOW REAPER "<<endl;
-	cout << "TRANG BI HIEN TAI:" << endl;
-	for (int i = 0; i < 3; i++) {
-		cout << "[" << i+1 << "] "; vk[i]->TanCong();
-	} 
-	cout << endl;
-	
-	// Vu khi dang su dung
-	cout << "===== Vu Khi Dang Su Dung =====" << endl;
-	switch (x) {
-		case 0: cout << sung << endl; break;
-		case 1: cout << kiem << endl; break;
-		case 2: cout << phep << endl; break;
-	}
-	
-	// Menu lua chon
-	cout << "==============================" << endl;
-	cout << "  1. Tan cong"   << endl;
-	cout << "  2. Doi vu khi" << endl;
-	cout << "  3. Che tao vu khi" << endl;
-	cout << "  0. Thoat"      << endl;
-	cout << "==============================" << endl;
+	cout << "==============================\n";
+	cout << "  1. Tan cong\n";
+	cout << "  2. Doi vu khi\n";
+	cout << "  3. Che tao lai vu khi\n";
+	cout << "  0. Thoat\n";
+	cout << "==============================\n";
 	cout << "Lua chon: ";
 }
 
 int main() {
-	NguoiRom nr(10000, 0);
-	
-	// Khai bao 3 vu khi  
-	Sung      sung("AK47", 35, 10, 30, 2);
-	Kiem      kiem("Muramasa", 50, 2, 100);
-	PhepThuat phep("Amaterasu", 60, 1, "Hoa", 10);
-	
-	VuKhi* vk[3] = { &sung, &kiem, &phep };
-	
-	int lua = -1, x = 0;
-	
-	while (lua != 0 && nr.ConSong()) {
-		
-		hienThiGiaoDien(nr, vk, x, sung, kiem, phep);
+	// Khai bao 1 so vu khi mac dinh 
+	Sung      sung("AK47",      35, 10.0f, 30, 2.0f);
+	Kiem      kiem("Muramasa",  50,  2.0f, 100);
+	PhepThuat phep("Amaterasu", 60,  1.0f, "Hoa");
+	VuKhi *vk[3] = {&sung , &kiem , &phep};
+	// khai bao muc tieu test dame nguoi rom va nguoi choi 
+	NhanVat nr    ("Nguoi Rom",     10000, 0 );
+	NhanVat player("Shadow Reaper", 10000, 500 , vk , 0);  // name , hp , mana , vu khi , 	
+	int lua = -1;	
+	while (lua != 0 && nr.ConSong()) {		
+		hienThiGiaoDien(nr, player);
 		cin >> lua;
 		
-		if (lua == 1) {
-			//TAN CONG
+		if (lua == 1) { 
+			//TAN CONG 
 			clearScreen();
-			cout<<nr;
-			cout << "===== TAN CONG =====" << endl;
-			vk[x]->TanCong();
-			cout << endl;
-			cout << "Nhap thoi gian tan cong (giay): ";
+			cout << "========== MUC TIEU: " << nr.getName() << " ==========\n";
+			cout << nr;
+			cout << "========== PLAYER: " << player.getName() << " ==========\n";
+			cout << player ;
+			cout << "===== TAN CONG =====\n";
+			player[player.getViTriDangDung()]->TanCong();  
+			cout << "\nNhap thoi gian tan cong (giay): ";
 			int t; cin >> t;
-			cout << endl;
-			int damage = vk[x]->SatThuong(t);
-			cout << endl;
-			cout << "Sat thuong gay len nguoi rom: " << damage << endl;
+			int damage = player.SatThuong(t);   
+			cout << "\nSat thuong gay len " << nr.getName() << ": " << damage << "\n";
 			if (damage > 0) {
-				cout << endl;
-				nr.NhanSatThuong(damage);
+				cout <<endl;
+				nr.BiTanCong(damage);
 				if (nr.ConSong())
-					cout << endl << ">> Nguoi rom van song! HP: " << nr.getHp() << endl;
+					cout << "\n>> " << nr.getName() << " van song! HP: " << nr.getHp() << "\n";
 				else
-					cout << endl << ">> Nguoi rom da bi ha guc!" << endl;
+					cout << "\n>> " << nr.getName() << " da bi ha guc!\n";
 			}
-			cout << endl << "Nhan Enter de tiep tuc...";
+			cout << "\nNhan Enter de tiep tuc...";
 			cin.ignore(); cin.get();
 		}
 		else if (lua == 2) {
-			//DOI VU KHI
+			//DOI VU KHI 
 			clearScreen();
-			cout << "===== DOI VU KHI =====" << endl;
-			cout << "	1. Sung" << endl;
-			cout << "	2. Kiem" << endl;
-			cout << "	3. Phep Thuat" << endl;
-			cout << "Lua chon: ";
+			cout << "===== DOI VU KHI =====\n";
+			player.trangBiHienTai();
+			cout << "Lua chon (1-3): ";
 			int chon; cin >> chon;
-			if (chon >= 1 && chon <= 3) x = chon - 1;
-			cout << endl << ">> Da chon: "; vk[x]->TanCong();
-			cout << endl << "Nhan Enter de tiep tuc...";
+			player.setViTriDangDung(chon-1);
+			cout << "\n>> Da chon:\n";
+			player[player.getViTriDangDung()]->TanCong(); 
+			cout << "\nNhan Enter de tiep tuc...";
 			cin.ignore(); cin.get();
 		}
 		else if (lua == 3) {
-			//CHE TAO VU KHI
+		//CHE TAO VU KHI
 			clearScreen();
-			cout << "===== CHE TAO VU KHI =====" << endl;
-			cout << "	1. Sung" << endl;
-			cout << "	2. Kiem" << endl;
-			cout << "	3. Phep Thuat" << endl;
+			cout << "===== CHE TAO VU KHI =====\n";
+			cout << "  1. Sung\n  2. Kiem\n  3. Phep Thuat\n";
 			cout << "Lua chon: ";
 			int chon; cin >> chon;
 			switch (chon) {
-			case 1:
-				cin >> sung;
-				x = 0;
+				case 1: 
+				cin >> sung; 
+				player[0] = &sung ; 
+				player.setViTriDangDung(0); 
 				break;
-			case 2:
-				cin >> kiem;
-				x = 1;
+				case 2: 
+				cin >> kiem; 
+				player[1] = &kiem ; 
+				player.setViTriDangDung(1); 
 				break;
-			case 3:
-				cin >> phep;
-				x = 2 ; 
-				break ;
-			default:
+				case 3: 
+				cin >> phep; 
+				player[2] = &phep ; 
+				player.setViTriDangDung(2); 
 				break;
+				default: cout << "Lua chon khong hop le!\n"; break;
 			}
-			cout << endl << ">> Che tao thanh cong!" << endl;
+			cout << "\n>> Che tao thanh cong!\n";
 			cout << "Nhan Enter de tiep tuc...";
 			cin.ignore(); cin.get();
 		}
 		else if (lua == 0) {
 			clearScreen();
-			cout << "Tam biet ban!" << endl;
+			cout << "Tam biet!\n";
 			return 0;
 		}
 		else {
-			cout << "Lua chon khong hop le, yeu cau nhap lai." << endl;
+			cout << "Lua chon khong hop le.\n";
 			cout << "Nhan Enter de tiep tuc...";
 			cin.ignore(); cin.get();
 		}
@@ -145,10 +134,10 @@ int main() {
 	
 	if (!nr.ConSong()) {
 		clearScreen();
-		cout << endl;
-		cout << "=============================" << endl;
-		cout << "  NGUOI ROM DA BI TIEU DIET! " << endl;
-		cout << "=============================" << endl;
+		cout << "\n=============================\n"
+		<< "  " << nr.getName() << " DA BI TIEU DIET!\n"
+		<< "=============================\n";
 	}
+	
 	return 0;
 }

@@ -79,18 +79,22 @@ class Kiem : public VuKhi {
 
             return tongDamage;
         }
+	
+		void inThongTin(){
+			cout << "Player dang su dung VU KHI: " ;
+			cout <<"Kiem " << getTenVuKhi() << endl;
+			cout << setw(20) << left << "Sat thuong:" << getSatThuongCoBan() << endl;
+			cout << setw(20) << left << "Toc do:" << getTocDoRaDon() << " don/s\n";
+			cout << setw(20) << left << "Do ben:" << doBen <<"/"<<doBenMax<<endl;
+			
+			if (doBen <= 0) cout << " [GAY!]";
+			else if (doBen < 30) cout << " [THAP]";
+			
+			cout << endl;
+		}
         //Xuất thông tin
         friend ostream& operator<<(ostream& os, Kiem km) {
-            os << "Player dang su dung VU KHI: " ;
-            os <<"Kiem " << km.getTenVuKhi() << endl;
-            os << setw(20) << left << "Sat thuong:" << km.getSatThuongCoBan() << endl;
-            os << setw(20) << left << "Toc do:" << km.getTocDoRaDon() << " don/s\n";
-            os << setw(20) << left << "Do ben:" << km.doBen <<"/"<<km.doBenMax<<endl;
-
-            if (km.doBen <= 0) os << " [GAY!]";
-            else if (km.doBen < 30) os << " [THAP]";
-
-            os << endl;
+			km.inThongTin();
             return os;
         }
         //Nhập thông tin
