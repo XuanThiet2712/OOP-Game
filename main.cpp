@@ -17,7 +17,7 @@ void clearScreen() {
 void hienThiGiaoDien(NguoiRom& nr, VuKhi* vk[], int x, Sung& sung, Kiem& kiem, PhepThuat& phep) {
 	clearScreen();
 	
-	// Header - Muc tieu nguoi rom
+	// Header - Muc tieu nguoi romm
 	cout << nr; 
 	cout << endl;
 	
