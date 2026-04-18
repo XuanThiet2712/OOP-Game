@@ -177,9 +177,6 @@ public:
 		<< "Tan cong tam gan bang nhung nhat chem sac ben"
 		<< " - " << B_RED << getSatThuongCoBan() << " dmg/chem" << RESET
 		<< ", " << getTocDoRaDon() << " chem/giay." << endl;
-		if (doBen <= 0)			cout << RED		<< doBen << "/" << doBenMax << " [GAY!]"	<< RESET;
-		else if (doBen < 30)	cout << YELLOW 	<< doBen << "/"	<< doBenMax << " [THAP!]"	<< RESET;
-		else					cout << GREEN  	<< doBen << "/"	<< doBenMax					<< RESET;
 		cout << endl;
 	}
 	
