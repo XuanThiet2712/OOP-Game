@@ -657,7 +657,7 @@ int main() {
 	
 	VuKhi* vk[3] = { &sung, &kiem, &phep };
 	
-	NhanVat nr		("Nguoi Rom",	 10000, 0);
+	NhanVat nr		("BAC NONG DAN ",	 10000, 100);
 	NhanVat player	("Shadow Reaper",10000, 500, vk, 0);
 	
 	phep.setNguoiDungPhep(&player);
