@@ -682,9 +682,11 @@ int main() {
 			player[player.getViTriDangDung()]->TanCong();
 			cout << "\nNhap thoi gian tan cong (giay): ";
 			int t; cin >> t;
-			int damage = player.SatThuong(t);
+			int damage = player[player.getViTriDangDung()]->SatThuong(t);
 			cout << "\n" << B_RED << BOLD << "Sat thuong gay len " << nr.getName() << ": " << damage << RESET << "\n";
-			player.HoiMana(t);
+			if (player.getViTriDangDung() != 3 ) {
+				player.HoiMana(t);
+			}
 			if (damage > 0) {
 				cout << endl;
 				nr.BiTanCong(damage);
