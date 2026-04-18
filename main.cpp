@@ -136,7 +136,7 @@ public:
 	}
 	
 	void inThongTin() override {
-		cout << "Player dang su dung " << YELLOW << BOLD<< "VU KHI: Sung " << CYAN << getTenVuKhi() 	<< RESET << endl;
+		cout << "Player dang su dung " << CYAN  << BOLD<< "SUNG " << getTenVuKhi() 	<< RESET << endl;
 		cout << left << setw(22) << "Sat thuong/vien:"	<< B_RED	<< getSatThuongCoBan()				<< RESET << endl;
 		cout << left << setw(22) << "Toc do ban:"		<< B_YELLOW << getTocDoRaDon() 	<< " dan/giay" 	<< RESET << endl;
 		cout << left << setw(22) << "Dan con lai:"		<< B_YELLOW << soLuongDan		<< " vien"		<< RESET << endl;
@@ -225,7 +225,7 @@ public:
 	}
 	
 	void inThongTin() override {
-		cout << "Player dang su dung " << B_CYAN << BOLD << "VU KHI: Kiem " << CYAN << getTenVuKhi()<< RESET << endl;
+		cout << "Player dang su dung "<< CYAN<<"  Kiem " << getTenVuKhi()<< RESET << endl;
 		cout << left << setw(22) << "Sat thuong/don:"	<< B_RED	<< getSatThuongCoBan()			<< RESET << endl;
 		cout << left << setw(22) << "Toc do:"			<< B_YELLOW << getTocDoRaDon() << " don/s"	<< RESET << endl;
 		cout << left << setw(22) << "Do ben:";
@@ -387,9 +387,9 @@ public:
 	}
 	
 	friend ostream& operator<<(ostream& out, NhanVat nv) {
-		out << left << setw(22) << "Ten:"  << B_WHITE  << nv.nameNV               << RESET << endl;
-		out << left << setw(22) << "HP:"   << B_GREEN  << nv.hp                   << RESET << endl;
-		out << left << setw(22) << "Mana:" << B_BLUE   << nv.mana << "/" << nv.manaMax << RESET << endl;
+		out << left << setw(22) << "Ten:"  << B_WHITE  << nv.nameNV	<< RESET << endl;
+		out << left << setw(22) << "HP:"   << B_RED  << nv.hp 		<< RESET << endl;
+		out << left << setw(22) << "Mana:" << BLUE   << nv.mana <<B_BLUE<< "/" << nv.manaMax << RESET << endl;
 		out << left << setw(22) << "Hoi mana/giay:" << B_BLUE << nv.hoiManaPerSec << RESET << endl;
 		out << CYAN << "========================================" << RESET << endl;
 		return out;
@@ -641,9 +641,9 @@ void hienThiGiaoDien(NhanVat& nr, NhanVat& p) {
 	clearScreen();
 	cout << RED << BOLD << "========== MUC TIEU: " << nr.getName() << " ==========" << RESET << "\n";
 	cout << nr;
-	cout << GREEN 	<< "PLAYER: " << p.getName() << RESET
-	<< " | HP: " 	<< B_GREEN << p.getHp() 	<< RESET
-	<< " | Mana: " 	<< B_BLUE << p.getMana() << "/" << p.getManaMax() << RESET << "\n";
+	cout << RED	<< "PLAYER: " <<B_WHITE<< p.getName() << RESET
+	<< " | HP: " 	<< B_RED<< p.getHp() 	<< RESET
+	<< " | Mana: " 	<< BLUE << p.getMana() <<B_BLUE<< "/" << p.getManaMax() << RESET << "\n";
 	cout << CYAN << "TRANG BI HIEN TAI:" << RESET << "\n";
 	p.trangBiHienTai();
 	cout << "\n";
@@ -685,8 +685,8 @@ int main() {
 			cout << RED << BOLD << "========== MUC TIEU: " << nr.getName() << " ==========" << RESET << "\n";
 			cout << nr;
 			cout << GREEN << "PLAYER: " << player.getName() << RESET
-			<< " | HP: " << B_GREEN << player.getHp() << RESET
-			<< " | Mana: " << B_BLUE << player.getMana() << "/" << player.getManaMax() << RESET <<endl;
+			<< " | HP: " << B_RED << player.getHp() << RESET
+			<< " | Mana: " << BLUE << player.getMana() <<B_BLUE<< "/" << player.getManaMax() << RESET <<endl;
 			cout << YELLOW << BOLD << "===== TAN CONG =====" << RESET << "\n";
 			player[player.getViTriDangDung()]->TanCong();
 			cout << "\nNhap thoi gian tan cong (giay): ";
