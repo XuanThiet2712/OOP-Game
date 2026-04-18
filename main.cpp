@@ -5,6 +5,26 @@
 #include <ctime>
 using namespace std;
 
+// ============================================================
+//  ANSI COLOR CODES
+// ============================================================
+#define RESET   "\033[0m"
+#define BOLD    "\033[1m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define WHITE   "\033[37m"
+#define B_RED     "\033[91m"
+#define B_GREEN   "\033[92m"
+#define B_YELLOW  "\033[93m"
+#define B_BLUE    "\033[94m"
+#define B_MAGENTA "\033[95m"
+#define B_CYAN    "\033[96m"
+#define B_WHITE   "\033[97m"
+
 void clearScreen() {
 #ifdef _WIN32
 	system("cls");
@@ -12,44 +32,45 @@ void clearScreen() {
 	system("clear");
 #endif
 }
+
+// ============================================================
 // FORWARD DECLARATION
+// ============================================================
 class NhanVat;
 
-// CLASS VUKHI
+// ============================================================
+// CLASS VUKHI (abstract base)
+// ============================================================
 class VuKhi {
 private:
-	string	tenVuKhi;
-	int		satThuongCoBan;
-	float	tocDoRaDon;
+	string  tenVuKhi;
+	int     satThuongCoBan;
+	float   tocDoRaDon;
 public:
-	// ham khoi tao tham so 
-	VuKhi(string ten = "Chua co", int st = 0, float td = 0) {
-		tenVuKhi		= ten;
-		satThuongCoBan	= st;
-		tocDoRaDon		= td;
-	}
-	// ham khoi tao sao chep
-	VuKhi(const VuKhi& vk){
-		tenVuKhi = vk.tenVuKhi ;
-		satThuongCoBan = vk.satThuongCoBan ;
-		tocDoRaDon = vk.tocDoRaDon ; 
-	}
-	~VuKhi() {}
+	VuKhi(string ten = "Chua co", int st = 0, float td = 0)
+	: tenVuKhi(ten), satThuongCoBan(st), tocDoRaDon(td) {}
 	
-	string	getTenVuKhi()		{ return tenVuKhi;			}
-	int		getSatThuongCoBan()	{ return satThuongCoBan;	}
-	float	getTocDoRaDon()		{ return tocDoRaDon;		}
+	VuKhi(const VuKhi& vk)
+	: tenVuKhi(vk.tenVuKhi), satThuongCoBan(vk.satThuongCoBan), tocDoRaDon(vk.tocDoRaDon) {}
 	
-	void setTenVuKhi(string ten)	{ tenVuKhi			= ten; }
-	void setSatThuongCoBan(int st)	{ satThuongCoBan	= st;  }
-	void setTocDoRaDon(float td)	{ tocDoRaDon		= td;  }
+	virtual ~VuKhi() {}
 	
-	virtual void TanCong()			= 0;
-	virtual int  SatThuong(int t)	= 0;
-	virtual void inThongTin()		= 0;
+	string getTenVuKhi()        const { return tenVuKhi;        }
+	int    getSatThuongCoBan()  const { return satThuongCoBan;  }
+	float  getTocDoRaDon()      const { return tocDoRaDon;      }
+	
+	void setTenVuKhi(string ten)    { tenVuKhi          = ten; }
+	void setSatThuongCoBan(int st)  { satThuongCoBan    = st;  }
+	void setTocDoRaDon(float td)    { tocDoRaDon        = td;  }
+	
+	virtual void TanCong()          = 0;
+	virtual int  SatThuong(int t)   = 0;
+	virtual void inThongTin()       = 0;
 };
 
+// ============================================================
 // CLASS SUNG
+// ============================================================
 class Sung : public VuKhi {
 private:
 	int   soLuongDan;
@@ -60,69 +81,73 @@ public:
 	: VuKhi(ten, st, td), soLuongDan(sld), tocDoThayBang(tdb) {}
 	~Sung() {}
 	
-	void TanCong() {
-		cout << "[ SUNG ] [SUNG " << getTenVuKhi() << "] Tan cong tam xa bang nhung vien dan chay bong"
-		<< " - " << getSatThuongCoBan() << " dmg/vien, "
-		<< getTocDoRaDon() << " dan/giay. ";
-		cout << endl << "	>> Dan hien tai: " << soLuongDan << " vien." << endl;
+	void TanCong() override {
+		cout << YELLOW << BOLD << "[ SUNG ]" << RESET
+		<< " [SUNG " << CYAN << getTenVuKhi() << RESET << "] "
+		<< "Tan cong tam xa bang nhung vien dan chay bong"
+		<< " - " << B_RED << getSatThuongCoBan() << " dmg/vien" << RESET
+		<< ", " << getTocDoRaDon() << " dan/giay." << endl;
+		cout << "    >> Dan hien tai: " << B_YELLOW << soLuongDan << " vien" << RESET << endl;
 	}
 	
-	int SatThuong(int t) {
-		float 	thoiGianConLai	= (float)t;
-		int		tongDamage		= 0;
-		int		soLanThayBang	= 0;
-		int		dungLuongBang	= soLuongDan;
-		float thoiGianBanHetDan = soLuongDan / getTocDoRaDon();
+	int SatThuong(int t) override {
+		float   thoiGianConLai   = (float)t;
+		int     tongDamage       = 0;
+		int     soLanThayBang    = 0;
+		int     dungLuongBang    = soLuongDan;
+		float   thoiGianBanHetDan = soLuongDan / getTocDoRaDon();
 		
-		cout << endl << "[Dien bien chien dau - " << t << " giay]" << endl;
-		cout << "	Dan luc dau:" << soLuongDan << " vien" << endl;
+		cout << endl << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
+		cout << "    Dan luc dau: " << B_YELLOW << soLuongDan << " vien" << RESET << endl;
 		
 		while (thoiGianConLai > 0) {
 			if (soLuongDan == 0) {
 				if (thoiGianConLai <= tocDoThayBang) {
-					cout << "	>> Het dan! Can " << tocDoThayBang
-					<< "s thay bang nhung chi con " << thoiGianConLai << "s -> Dung ban." << endl;
+					cout << RED << "    >> Het dan! Can " << tocDoThayBang
+					<< "s thay bang nhung chi con " << thoiGianConLai << "s -> Dung ban." << RESET << endl;
 					break;
 				}
-				cout << "	>> Het dan! Tu dong thay bang... (-" << tocDoThayBang << "s)" << endl;
+				cout << YELLOW << "    >> Het dan! Tu dong thay bang... (-" << tocDoThayBang << "s)" << RESET << endl;
 				thoiGianConLai -= tocDoThayBang;
 				soLuongDan      = dungLuongBang;
 				soLanThayBang++;
-				cout << "	Bang moi nap xong:" << soLuongDan << " vien | Con lai: " << thoiGianConLai << "s" << endl;
+				cout << "    Bang moi nap xong: " << B_YELLOW << soLuongDan << " vien" << RESET
+				<< " | Con lai: " << thoiGianConLai << "s" << endl;
 				continue;
 			}
 			if (thoiGianConLai >= thoiGianBanHetDan) {
-				int damage  = soLuongDan * getSatThuongCoBan();
-				tongDamage += damage;
+				int damage   = soLuongDan * getSatThuongCoBan();
+				tongDamage  += damage;
 				thoiGianConLai -= thoiGianBanHetDan;
-				cout << "	Ban het " << soLuongDan << " vien" << " (mat " << thoiGianBanHetDan << "s)"
-				<< " | Damage: +" << damage << " | Con lai: " << thoiGianConLai << "s" << endl;
+				cout << "    Ban het " << soLuongDan << " vien (mat " << thoiGianBanHetDan << "s)"
+				<< " | Damage: " << B_RED << "+" << damage << RESET
+				<< " | Con lai: " << thoiGianConLai << "s" << endl;
 				soLuongDan = 0;
 			} else {
 				int danBan = (int)(getTocDoRaDon() * thoiGianConLai);
 				if (danBan == 0) break;
-				int damage  = danBan * getSatThuongCoBan();
-				tongDamage += damage;
-				soLuongDan -= danBan;
-				cout << "	Ban them " << danBan << " vien | Damage: +" << damage
+				int damage   = danBan * getSatThuongCoBan();
+				tongDamage  += damage;
+				soLuongDan  -= danBan;
+				cout << "    Ban them " << danBan << " vien | Damage: " << B_RED << "+" << damage << RESET
 				<< " | Dan con lai trong bang: " << soLuongDan << " vien" << endl;
 				thoiGianConLai = 0;
 			}
 		}
+		
 		cout << endl;
-		cout << left << setw(28) << "	Tong so lan thay bang:" << soLanThayBang << endl;
-		cout << left << setw(28) << "	Dan con lai:"			<< soLuongDan    << " vien" << endl;
-		cout << left << setw(28) << "	Tong damage :"			<< tongDamage    << endl;
+		cout << left << setw(28) << "    Tong so lan thay bang:" << soLanThayBang << endl;
+		cout << left << setw(28) << "    Dan con lai:"           << soLuongDan    << " vien" << endl;
+		cout << BOLD << B_RED << left << setw(28) << "    Tong damage:"  << tongDamage << RESET << endl;
 		return tongDamage;
 	}
 	
-	void inThongTin() {
-		cout << "Player dang su dung VU KHI: ";
-		cout << "Sung "	<< getTenVuKhi() 												<< endl;
-		cout << left << setw(22) << "Sat thuong/vien:" << getSatThuongCoBan()			<< endl;
-		cout << left << setw(22) << "Toc do ban:"      << getTocDoRaDon()<< " dan/giay" << endl;
-		cout << left << setw(22) << "Dan con lai:"     << soLuongDan		<< " vien" 	<< endl;
-		cout << left << setw(22) << "Toc do thay bang:"<< tocDoThayBang		<< " giay"	<< endl;
+	void inThongTin() override {
+		cout << "Player dang su dung " << YELLOW << BOLD << "VU KHI: Sung " << CYAN << getTenVuKhi() << RESET << endl;
+		cout << left << setw(22) << "Sat thuong/vien:"   << B_RED    << getSatThuongCoBan()           << RESET << endl;
+		cout << left << setw(22) << "Toc do ban:"        << B_YELLOW << getTocDoRaDon() << " dan/giay" << RESET << endl;
+		cout << left << setw(22) << "Dan con lai:"       << B_YELLOW << soLuongDan     << " vien"      << RESET << endl;
+		cout << left << setw(22) << "Toc do thay bang:"  << tocDoThayBang << " giay" << endl;
 	}
 	
 	friend istream& operator>>(istream& is, Sung& sg);
@@ -132,67 +157,84 @@ public:
 istream& operator>>(istream& is, Sung& sg) {
 	string name; int damage; float td;
 	is.ignore();
-	cout << "===== VU KHI: SUNG =====" << endl;
-	cout << "Moi ban nhap ten Sung : ";                                getline(is, name);
-	cout << "Moi ban nhap sat thuong / vien dan : ";                   is >> damage;
-	cout << "Moi ban nhap toc do ban / 1s (so dan ban duoc trong 1s): "; is >> td;
+	cout << YELLOW << BOLD << "===== VU KHI: SUNG =====" << RESET << endl;
+	cout << "Moi ban nhap ten Sung : ";                              getline(is, name);
+	cout << "Moi ban nhap sat thuong / vien dan : ";                 is >> damage;
+	cout << "Moi ban nhap toc do ban / 1s (dan ban duoc trong 1s): "; is >> td;
 	sg.setTenVuKhi(name); sg.setSatThuongCoBan(damage); sg.setTocDoRaDon(td);
-	cout << "Moi ban nhap so luong dan (so luong bang dan) : ";        is >> sg.soLuongDan;
-	cout << "Moi ban nhap toc do thay bang (giay) : ";                 is >> sg.tocDoThayBang;
+	cout << "Moi ban nhap so luong dan (so luong bang dan) : ";      is >> sg.soLuongDan;
+	cout << "Moi ban nhap toc do thay bang (giay) : ";               is >> sg.tocDoThayBang;
 	return is;
 }
 
+// ============================================================
 // CLASS KIEM
+// ============================================================
 class Kiem : public VuKhi {
 private:
 	int doBen;
 	int doBenMax;
 public:
 	Kiem() : VuKhi(), doBen(100), doBenMax(100) {}
-	Kiem(string ten, int st, float td, float db) : VuKhi(ten, st, td), doBen(db), doBenMax(db) {}
+	Kiem(string ten, int st, float td, int db) : VuKhi(ten, st, td), doBen(db), doBenMax(db) {}
 	~Kiem() {}
 	
-	int  getDoBen()    { return doBen;    }
-	int  getDoBenMax() { return doBenMax; }
+	int  getDoBen()    const { return doBen;    }
+	int  getDoBenMax() const { return doBenMax; }
 	void setDoBen(int db)    { doBen    = (db < 0) ? 0 : db; }
 	void setDoBenMax(int db) { doBenMax = (db < 0) ? 0 : db; }
 	
-	void TanCong() {
-		cout << "[ KIEM ] [KIEM " << getTenVuKhi() << "] Tan cong tam gan bang nhung nhat chem sac ben"
-		<< " - " << getSatThuongCoBan() << " dmg/chem, "
-		<< getTocDoRaDon() << " chem/giay.";
-		cout << endl << "	>> Do ben hien tai : " << doBen << "/" << doBenMax << endl;
+	void TanCong() override {
+		cout << B_CYAN << BOLD << "[ KIEM ]" << RESET
+		<< " [KIEM " << CYAN << getTenVuKhi() << RESET << "] "
+		<< "Tan cong tam gan bang nhung nhat chem sac ben"
+		<< " - " << B_RED << getSatThuongCoBan() << " dmg/chem" << RESET
+		<< ", " << getTocDoRaDon() << " chem/giay." << endl;
+		cout << "    >> Do ben hien tai: ";
+		if (doBen <= 0)       cout << RED   << doBen << "/" << doBenMax << " [GAY!]"    << RESET;
+		else if (doBen < 30)  cout << YELLOW << doBen << "/" << doBenMax << " [THAP!]"  << RESET;
+		else                  cout << GREEN  << doBen << "/" << doBenMax               << RESET;
+		cout << endl;
 	}
 	
-	int SatThuong(int t) {
-		if (doBen <= 0) { cout << ">> Kiem da gay! Khong the tan cong!\n"; return 0; }
+	int SatThuong(int t) override {
+		if (doBen <= 0) {
+			cout << RED << ">> Kiem da gay! Khong the tan cong!" << RESET << endl;
+			return 0;
+		}
 		
 		int tongDon    = (int)(getTocDoRaDon() * t);
 		int tongDamage = 0;
+		
+		cout << endl << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
 		cout << ">> Tan cong trong " << t << " giay (" << tongDon << " don)\n";
 		
 		for (int i = 0; i < tongDon; i++) {
 			if (doBen <= 0) break;
-			float heSoDoBen   = doBen / (float)doBenMax;
+			float heSoDoBen    = doBen / (float)doBenMax;
 			int   damageMoiDon = (int)(getSatThuongCoBan() * heSoDoBen);
 			tongDamage += damageMoiDon;
 			doBen--;
 		}
-		cout << ">> Tong sat thuong: " << tongDamage << endl;
-		cout << ">> Do ben con lai: "  << doBen << "/" << doBenMax << "\n";
-		if (doBen <= 0)   cout << ">> Kiem da gay!\n";
-		else if (doBen < 30) cout << ">> Canh bao: Do ben thap!\n";
+		
+		cout << ">> Tong sat thuong: " << B_RED   << tongDamage                  << RESET << endl;
+		cout << ">> Do ben con lai:  ";
+		if (doBen <= 0)      cout << RED    << doBen << "/" << doBenMax << " [GAY!]"   << RESET;
+		else if (doBen < 30) cout << YELLOW << doBen << "/" << doBenMax << " [THAP!]"  << RESET;
+		else                 cout << GREEN  << doBen << "/" << doBenMax                << RESET;
+		cout << endl;
+		
 		return tongDamage;
 	}
 	
-	void inThongTin() {
-		cout << "Player dang su dung VU KHI: ";
-		cout << "Kiem " << getTenVuKhi() << endl;
-		cout << setw(20) << left << "Sat thuong:" << getSatThuongCoBan() << endl;
-		cout << setw(20) << left << "Toc do:"     << getTocDoRaDon()     << " don/s\n";
-		cout << setw(20) << left << "Do ben:"     << doBen << "/" << doBenMax << endl;
-		if (doBen <= 0)      cout << " [GAY!]";
-		else if (doBen < 30) cout << " [THAP]";
+	void inThongTin() override {
+		cout << "Player dang su dung " << B_CYAN << BOLD << "VU KHI: Kiem " << CYAN << getTenVuKhi() << RESET << endl;
+		cout << left << setw(22) << "Sat thuong/don:" << B_RED    << getSatThuongCoBan()           << RESET << endl;
+		cout << left << setw(22) << "Toc do:"         << B_YELLOW << getTocDoRaDon() << " don/s"   << RESET << endl;
+		cout << left << setw(22) << "Do ben:";
+		if (doBen <= 0)      cout << RED    << doBen << "/" << doBenMax << " [GAY!]"   << RESET;
+		else if (doBen < 30) cout << YELLOW << doBen << "/" << doBenMax << " [THAP!]"  << RESET;
+		else                 cout << GREEN  << doBen << "/" << doBenMax                << RESET;
 		cout << endl;
 	}
 	
@@ -200,8 +242,8 @@ public:
 	friend istream& operator>>(istream& is, Kiem& km) {
 		string ten; int st; float td;
 		is.ignore();
-		cout << "===== VU KHI: KIEM =====" << endl;
-		cout << "Nhap ten kiem : ";          getline(is >> ws, ten);
+		cout << B_CYAN << BOLD << "===== VU KHI: KIEM =====" << RESET << endl;
+		cout << "Nhap ten kiem : ";           getline(is >> ws, ten);
 		cout << "Nhap sat thuong moi don : "; is >> st;
 		cout << "Nhap toc do ra don /1s : ";  is >> td;
 		km.setTenVuKhi(ten); km.setSatThuongCoBan(st); km.setTocDoRaDon(td);
@@ -212,12 +254,14 @@ public:
 	}
 };
 
-// CLASS PHEPTHUAT
+// ============================================================
+// CLASS PHEPTHUAT  (dinh nghia day du truoc NhanVat)
+// ============================================================
 class PhepThuat : public VuKhi {
 private:
-	string	loaiPhep;
-	int		manaTieuThu;
-	NhanVat	*nguoiDungPhep;  // tro toi nguoiDungPhep, truy cap mana nho friend
+	string   loaiPhep;
+	int      manaTieuThu;
+	NhanVat* nguoiDungPhep;
 	
 public:
 	PhepThuat() : VuKhi(), loaiPhep("Hoa"), manaTieuThu(10), nguoiDungPhep(nullptr) {}
@@ -225,34 +269,32 @@ public:
 	: VuKhi(ten, st, td), loaiPhep(lp), manaTieuThu(mtb), nguoiDungPhep(nullptr) {}
 	~PhepThuat() {}
 	
-	string   getLoaiPhep()                 	{ return loaiPhep;      }
-	int      getManaTieuThu()              	{ return manaTieuThu;   }
-	NhanVat*	 getNguoiDungPhep()				{ return nguoiDungPhep; }
-	void     setLoaiPhep(string lp)        	{ loaiPhep      = lp;   }
-	void     setManaTieuThu(int mtb)       { manaTieuThu   = mtb;  }
-	void     setNguoiDungPhep(NhanVat* nv) { nguoiDungPhep = nv;   }
+	string   getLoaiPhep()      const { return loaiPhep;       }
+	int      getManaTieuThu()   const { return manaTieuThu;    }
+	NhanVat* getNguoiDungPhep() const { return nguoiDungPhep;  }
 	
-	// Khai bao SAU class NhanVat 
+	void setLoaiPhep(string lp)        { loaiPhep      = lp;  }
+	void setManaTieuThu(int mtb)       { manaTieuThu   = mtb; }
+	void setNguoiDungPhep(NhanVat* nv) { nguoiDungPhep = nv;  }
+	
 	void TanCong()        override;
 	int  SatThuong(int t) override;
 	void inThongTin()     override;
 	
-	friend ostream& operator<<(ostream& out, PhepThuat x) { 
-		x.inThongTin(); return out; 
-	}
+	friend ostream& operator<<(ostream& out, PhepThuat x) { x.inThongTin(); return out; }
 	friend istream& operator>>(istream& is,  PhepThuat& p) {
 		string ten, lp; int st, mtb; float td;
 		is.ignore();
-		cout << "===== VU KHI: PHEP THUAT =====" << endl;
+		cout << B_MAGENTA << BOLD << "===== VU KHI: PHEP THUAT =====" << RESET << endl;
 		cout << "Nhap ten phep          : "; getline(is >> ws, ten);
 		cout << "Nhap sat thuong/don    : "; is >> st;
 		cout << "Nhap toc do ra don     : "; is >> td;
 		cout << "Nhap mana tieu thu/don : "; is >> mtb;
 		cout << "\nChon loai phep:" << endl;
-		cout << "  1. Hoa   (dot damage tang theo stack, max 5)"	<< endl;
-		cout << "  2. Phong (damage tang dan theo don, max x3)"		<< endl;
-		cout << "  3. Thuy  (moi 3 don burst x1.5)"					<< endl;
-		cout << "  4. Set   (25% chi mang x2 | 10% siet chet x3)"	<< endl;
+		cout << "  " << RED     << "1. Hoa   (dot damage tang theo stack, max 5)"    << RESET << endl;
+		cout << "  " << B_CYAN  << "2. Phong (damage tang dan theo don, max x3)"     << RESET << endl;
+		cout << "  " << BLUE    << "3. Thuy  (moi 3 don burst x1.5)"                << RESET << endl;
+		cout << "  " << MAGENTA << "4. Set   (25% chi mang x2 | 10% siet chet x3)"  << RESET << endl;
 		cout << "Lua chon (1-4): ";
 		int chon; is >> chon;
 		switch (chon) {
@@ -265,15 +307,14 @@ public:
 		p.setTenVuKhi(ten); p.setSatThuongCoBan(st); p.setTocDoRaDon(td);
 		p.loaiPhep    = lp;
 		p.manaTieuThu = mtb;
-		// nguoiDungPhep giu nguyen, khong reset
 		return is;
 	}
 };
 
+// ============================================================
 // CLASS NHANVAT
-// friend class PhepThuat -> PhepThuat truy cap mana/manaMax
+// ============================================================
 class NhanVat {
-//	friend class PhepThuat;  // cho phep PhepThuat truy cap mana, manaMax
 private:
 	string nameNV;
 	int    hp;
@@ -283,37 +324,38 @@ private:
 	int    viTriDangDung;
 	
 public:
-	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000, VuKhi* _vk[] = nullptr, int vt = 0) {
-		nameNV = _name;
-		hp     = _hp;
-		mana   = _mana;
-		manaMax= _mana;
+	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000,
+			VuKhi* _vk[] = nullptr, int vt = 0)
+	: nameNV(_name), hp(_hp), mana(_mana), manaMax(_mana), viTriDangDung(vt)
+	{
 		for (int i = 0; i < 3; i++)
 			vk[i] = (_vk ? _vk[i] : nullptr);
-		viTriDangDung = vt;
 	}
 	~NhanVat() {}
 	
-	string getName()			{ return nameNV;		}
-	int    getHp()				{ return hp;			}
-	int    getMana()			{ return mana;			}
-	int    getManaMax()			{ return manaMax;		}
-	int    getViTriDangDung() 	{ return viTriDangDung;	}
+	string getName()          const { return nameNV;        }
+	int    getHp()            const { return hp;            }
+	int    getMana()          const { return mana;          }
+	int    getManaMax()       const { return manaMax;       }
+	int    getViTriDangDung() const { return viTriDangDung; }
 	
-	void setName(string _name)   { nameNV = _name; }
-	void setHp(int _hp)          { hp   = (_hp < 0) ? 0 : _hp; }
-	void setMana(int _mana)      { mana = (_mana < 0) ? 0 : (_mana > manaMax ? manaMax : _mana); }
-	void setViTriDangDung(int vt){ viTriDangDung = vt; }
+	void setName(string _name)    { nameNV = _name; }
+	void setHp(int _hp)           { hp    = (_hp   < 0) ? 0 : _hp; }
+	void setMana(int _mana)       { mana  = (_mana < 0) ? 0 : (_mana > manaMax ? manaMax : _mana); }
+	void setViTriDangDung(int vt) { viTriDangDung = vt; }
 	
 	void trangBiHienTai() {
-		for (int i = 0; i < 3; i++) { cout << "[" << i+1 << "] "; vk[i]->TanCong(); }
+		for (int i = 0; i < 3; i++) {
+			cout << B_WHITE << "[" << i+1 << "] " << RESET;
+			vk[i]->TanCong();
+		}
 	}
 	
 	VuKhi*& operator[](int index) { return vk[index]; }
 	
 	int SatThuong(int t) {
 		VuKhi* v = vk[viTriDangDung];
-		if (v == nullptr) { cout << ">> [" << nameNV << "] Chua co vu khi!" << endl; return 0; }
+		if (!v) { cout << RED << ">> [" << nameNV << "] Chua co vu khi!" << RESET << endl; return 0; }
 		return v->SatThuong(t);
 	}
 	
@@ -321,17 +363,17 @@ public:
 		int hpTruoc = hp;
 		hp -= st;
 		if (hp < 0) hp = 0;
-		cout << ">> " << nameNV << " bi tan cong\n";
-		cout << "	HP: " << hpTruoc << " -> " << hp << endl;
+		cout << RED << ">> " << nameNV << " bi tan cong" << RESET << endl;
+		cout << "    HP: " << B_GREEN << hpTruoc << RESET << " -> " << B_RED << hp << RESET << endl;
 	}
 	
-	bool ConSong() { return hp > 0; }
+	bool ConSong() const { return hp > 0; }
 	
 	friend ostream& operator<<(ostream& out, NhanVat nv) {
-		out << left << setw(20) << "Ten:"  << nv.nameNV << endl;
-		out << left << setw(20) << "HP:"   << nv.hp     << endl;
-		out << left << setw(20) << "Mana:" << nv.mana << "/" << nv.manaMax << endl;
-		out << "========================================" << endl;
+		out << left << setw(20) << "Ten:"  << B_WHITE  << nv.nameNV               << RESET << endl;
+		out << left << setw(20) << "HP:"   << B_GREEN  << nv.hp                   << RESET << endl;
+		out << left << setw(20) << "Mana:" << B_BLUE   << nv.mana << "/" << nv.manaMax << RESET << endl;
+		out << CYAN << "========================================" << RESET << endl;
 		return out;
 	}
 	friend istream& operator>>(istream& in, NhanVat& nv) {
@@ -343,61 +385,90 @@ public:
 	}
 };
 
+// ============================================================
+// PHEPTHUAT – dinh nghia cac ham sau khi NhanVat da khai bao
+// ============================================================
+
+// Helper: tra ve mau tuong ung voi loai phep
+static const char* mauPhep(const string& lp) {
+	if (lp == "Hoa")   return RED;
+	if (lp == "Phong") return B_CYAN;
+	if (lp == "Thuy")  return BLUE;
+	if (lp == "Set")   return MAGENTA;
+	return WHITE;
+}
+
 void PhepThuat::TanCong() {
-	cout << "[ PHEP THUAT ] [" << getTenVuKhi() << "] "
-	<< "Loai: "           << loaiPhep
-	<< " - "              << getSatThuongCoBan() << " dmg/don, "
-	<< getTocDoRaDon()    << " don/giay." << endl;
-	cout << "    >> Mana tieu thu/don: " << manaTieuThu;
+	const char* mau = mauPhep(loaiPhep);
+	cout << mau << BOLD << "[ PHEP THUAT ]" << RESET
+	<< " [" << mau << getTenVuKhi() << RESET << "] "
+	<< "Loai: " << mau << BOLD << loaiPhep << RESET
+	<< " - " << B_RED << getSatThuongCoBan() << " dmg/don" << RESET
+	<< ", " << getTocDoRaDon() << " don/giay." << endl;
+	cout << "    >> Mana tieu thu/don: " << B_BLUE << manaTieuThu << RESET;
 	if (nguoiDungPhep)
-		cout << " | Mana hien tai: " << nguoiDungPhep->getMana()<< "/" << nguoiDungPhep->getManaMax();
+		cout << " | Mana hien tai: " << B_BLUE
+		<< nguoiDungPhep->getMana() << "/" << nguoiDungPhep->getManaMax() << RESET;
 	cout << endl;
 }
 
 int PhepThuat::SatThuong(int t) {
-	// Kiem tra nguoi dung
-	if (nguoiDungPhep == nullptr) {
-		cout << ">> [" << getTenVuKhi() << "] Chua gan nguoi dung phep!" << endl;
+	if (!nguoiDungPhep) {
+		cout << RED << ">> [" << getTenVuKhi() << "] Chua gan nguoi dung phep!" << RESET << endl;
 		return 0;
 	}
-	// Kiem tra du mana it nhat 1 don
 	if (nguoiDungPhep->getMana() < manaTieuThu) {
-		cout << ">> [" << getTenVuKhi() << "] Khong du mana! ("
-		<< nguoiDungPhep->getMana() << "/" << manaTieuThu << " can)" << endl;
+		cout << RED << ">> [" << getTenVuKhi() << "] Khong du mana! ("
+		<< nguoiDungPhep->getMana() << "/" << manaTieuThu << " can)" << RESET << endl;
 		return 0;
 	}
 	
-	int   tongSatThuong  = 0;
-	int   soDonDaDanh    = 0;
-	int   stackHoa       = 0;
-	float thoiGianConLai = (float)t;
-	float thoiGianMoiDon = 1.0f / getTocDoRaDon();
+	const char* mau   = mauPhep(loaiPhep);
+	int   tongSatThuong = 0;
+	int   soDonDaDanh   = 0;
+	int   stackHoa      = 0;
 	
-	cout << "\n[Dien bien chien dau - " << t << " giay | "
-	<< getTenVuKhi() << " - " << loaiPhep << "]" << endl;
-	cout << "  Mana luc dau: " << nguoiDungPhep->getMana() << "/" << nguoiDungPhep->getManaMax()<< endl;
+	// ------- tinh so don co the danh dua tren mana -------
+	int maxDon = (int)(getTocDoRaDon() * t);
+	int donMana = nguoiDungPhep->getMana() / manaTieuThu;
+	int tongDon = (maxDon < donMana) ? maxDon : donMana;
 	
-	while (thoiGianConLai >= thoiGianMoiDon) {
-		// Het mana giua chung
-		if (nguoiDungPhep->getMana() < manaTieuThu) {
-			cout << "  >> Het mana! Dung danh." << endl;
-			break;
-		}		
-		thoiGianConLai-= thoiGianMoiDon;
-		nguoiDungPhep->setMana(nguoiDungPhep->getMana() - manaTieuThu) ;  
+	cout << endl << mau << BOLD
+	<< "[=== Phep Thuat: " << getTenVuKhi()
+	<< " | " << loaiPhep << " ===]" << RESET << endl;
+	cout << "    Mana luc dau : " << B_BLUE
+	<< nguoiDungPhep->getMana() << "/" << nguoiDungPhep->getManaMax() << RESET << endl;
+	cout << "    So don du kien: " << B_WHITE << tongDon << RESET << endl;
+	cout << endl;
+	
+	// ---- header bang ----
+	cout << BOLD << WHITE
+	<< left  << setw(8)  << "  Don"
+	<< left  << setw(10) << "Dame"
+	<< left  << setw(20) << "Hieu ung"
+	<< left  << setw(14) << "Tong dame"
+	<< left  << setw(14) << "Mana con lai"
+	<< RESET << endl;
+	cout << WHITE << string(66, '-') << RESET << endl;
+	
+	for (int i = 0; i < tongDon; i++) {
+		if (nguoiDungPhep->getMana() < manaTieuThu) break;
+		
+		nguoiDungPhep->setMana(nguoiDungPhep->getMana() - manaTieuThu);
 		soDonDaDanh++;
 		
-		int    base			= getSatThuongCoBan();
-		int    dmg			= 0;
-		int    dmgHieuUng	= 0;
-		string ghiChu 		= "";
+		int    base      = getSatThuongCoBan();
+		int    dmg       = base;
+		int    dmgHieuUng = 0;
+		string ghiChu    = "-";
 		
 		// --- HOA: dot tang theo stack max 5, moi stack +20% base ---
 		if (loaiPhep == "Hoa") {
 			if (stackHoa < 5) stackHoa++;
 			dmgHieuUng = stackHoa * (base / 5);
 			dmg        = base + dmgHieuUng;
-			ghiChu     = "[dot +" + to_string(dmgHieuUng) + " | stack " + to_string(stackHoa) + "]";
+			ghiChu     = RED + string("dot +") + to_string(dmgHieuUng)
+			+ " [stack " + to_string(stackHoa) + "/5]" + RESET;
 		}
 		// --- PHONG: he so tang 0.1/don, max x3 ---
 		else if (loaiPhep == "Phong") {
@@ -405,86 +476,115 @@ int PhepThuat::SatThuong(int t) {
 			if (boSuc > 3.0f) boSuc = 3.0f;
 			dmg        = (int)(base * boSuc);
 			dmgHieuUng = dmg - base;
-			ghiChu     = "[phong x" + to_string(boSuc).substr(0,3) + " | bonus +" + to_string(dmgHieuUng) + "]";
+			ghiChu     = B_CYAN + string("x") + to_string(boSuc).substr(0,3)
+			+ " bonus +" + to_string(dmgHieuUng) + RESET;
 		}
 		// --- THUY: moi 3 don burst x1.5 ---
 		else if (loaiPhep == "Thuy") {
 			bool burst = (soDonDaDanh % 3 == 0);
 			dmg        = burst ? (int)(base * 1.5f) : base;
 			dmgHieuUng = dmg - base;
-			ghiChu     = burst ? "[Thuy burst x1.5 | bonus +" + to_string(dmgHieuUng) + "]" : "";
+			ghiChu     = burst
+			? (BLUE + string("BURST x1.5! +") + to_string(dmgHieuUng) + RESET)
+			: (string(BLUE) + "-" + RESET);
 		}
 		// --- SET: 25% chi mang x2, 10% siet chet x3 ---
 		else if (loaiPhep == "Set") {
 			int roll = rand() % 100;
-			if      (roll < 10) { dmg = base*3; dmgHieuUng = base*2; ghiChu = "[*** SIET CHET x3! ***]"; }
-			else if (roll < 35) { dmg = base*2; dmgHieuUng = base;   ghiChu = "[** Chi mang x2! **]";    }
-			else                { dmg = base; }
+			if      (roll < 10) { dmg = base*3; dmgHieuUng = base*2; ghiChu = string(B_MAGENTA) + BOLD + "*** SIET CHET x3!" + RESET; }
+			else if (roll < 35) { dmg = base*2; dmgHieuUng = base;   ghiChu = string(MAGENTA)           + "** Chi mang x2!"   + RESET; }
+			else                { ghiChu = string(MAGENTA) + "-" + RESET; }
 		}
-		else { dmg = base; }
 		
 		tongSatThuong += dmg;
-		cout << "  Don " << setw(3) << soDonDaDanh
-		<< " | base " << setw(4) << base
-		<< " | dmg +"  << setw(5) << dmg
-		<< " | mana: " << nguoiDungPhep->getMana() ; 
+		
+		// --- in tung dong ---
+		cout << mau
+		<< left  << setw(8)  << ("  " + to_string(soDonDaDanh))
+		<< RESET;
+		cout << B_RED   << left << setw(10) << dmg        << RESET;
+		// ghiChu da co ma mau ben trong, pad bang space thu cong
+		cout << ghiChu;
+		// tinh do rong thuc (bo escape codes)
+		int lenGhi = 0;
+		bool inEsc = false;
+		for (char c : ghiChu) {
+			if (c == '\033') { inEsc = true; continue; }
+			if (inEsc) { if (c == 'm') inEsc = false; continue; }
+			lenGhi++;
+		}
+		for (int s = lenGhi; s < 20; s++) cout << ' ';
+		cout << B_RED   << left << setw(14) << tongSatThuong << RESET;
+		cout << B_BLUE  << left << setw(14) << nguoiDungPhep->getMana() << RESET;
+		cout << endl;
 	}
 	
-	cout << endl;
-	cout << left << setw(28) << "  Tong don da danh:"  << soDonDaDanh                                  << endl;
-	cout << left << setw(28) << "  Mana con lai:"      << nguoiDungPhep->getMana() << "/" << nguoiDungPhep->getManaMax() << endl;
-	cout << left << setw(28) << "  Tong damage:"       << tongSatThuong                                << endl;
+	cout << WHITE << string(66, '-') << RESET << endl << endl;
+	
+	// ------- Tom tat -------
+	cout << left << setw(30) << "  Tong don da danh:"
+	<< B_WHITE << soDonDaDanh << RESET << endl;
+	cout << left << setw(30) << "  Mana con lai:"
+	<< B_BLUE << nguoiDungPhep->getMana() << "/" << nguoiDungPhep->getManaMax() << RESET << endl;
+	cout << BOLD << B_RED << left << setw(30) << "  Tong damage:"
+	<< tongSatThuong << RESET << endl;
+	
 	return tongSatThuong;
 }
 
 void PhepThuat::inThongTin() {
-	cout << "Player dang su dung VU KHI: ";
-	cout << "Phep Thuat " << getTenVuKhi() << endl;
-	cout << left << setw(25) << "Loai phep:"         << loaiPhep            << endl;
-	cout << left << setw(25) << "Sat thuong co ban:" << getSatThuongCoBan() << endl;
-	cout << left << setw(25) << "Toc do ra don:"     << getTocDoRaDon()     << " don/giay" << endl;
-	cout << left << setw(25) << "Mana tieu thu/don:" << manaTieuThu         << endl;
+	const char* mau = mauPhep(loaiPhep);
+	cout << "Player dang su dung " << mau << BOLD << "VU KHI: Phep Thuat "
+	<< getTenVuKhi() << RESET << endl;
+	cout << left << setw(25) << "Loai phep:"         << mau << BOLD << loaiPhep            << RESET << endl;
+	cout << left << setw(25) << "Sat thuong co ban:" << B_RED    << getSatThuongCoBan()    << RESET << endl;
+	cout << left << setw(25) << "Toc do ra don:"     << B_YELLOW << getTocDoRaDon() << " don/giay" << RESET << endl;
+	cout << left << setw(25) << "Mana tieu thu/don:" << B_BLUE   << manaTieuThu             << RESET << endl;
 	if (nguoiDungPhep)
 		cout << left << setw(25) << "Mana hien tai:"
-		<< nguoiDungPhep->getMana() << "/" << nguoiDungPhep->getManaMax() << endl;
+		<< B_BLUE << nguoiDungPhep->getMana() << "/" << nguoiDungPhep->getManaMax() << RESET << endl;
 }
 
-//ME NU
+// ============================================================
+// GIAO DIEN CHINH
+// ============================================================
 void hienThiGiaoDien(NhanVat& nr, NhanVat& p) {
 	clearScreen();
-	cout << "========== MUC TIEU: " << nr.getName() << " ==========\n";
+	cout << RED << BOLD << "========== MUC TIEU: " << nr.getName() << " ==========" << RESET << "\n";
 	cout << nr;
-	cout << "PLAYER: " << p.getName() << " | HP: " << p.getHp()
-	<< " | Mana: " << p.getMana() << "/" << p.getManaMax() << "\n";
-	cout << "TRANG BI HIEN TAI:\n";
+	cout << GREEN << "PLAYER: " << p.getName() << RESET
+	<< " | HP: " << B_GREEN << p.getHp() << RESET
+	<< " | Mana: " << B_BLUE << p.getMana() << "/" << p.getManaMax() << RESET << "\n";
+	cout << CYAN << "TRANG BI HIEN TAI:" << RESET << "\n";
 	p.trangBiHienTai();
 	cout << "\n";
-	cout << "===== Vu Khi Dang Su Dung =====\n";
+	cout << YELLOW << BOLD << "===== Vu Khi Dang Su Dung =====" << RESET << "\n";
 	p[p.getViTriDangDung()]->inThongTin();
 	cout << "\n";
-	cout << "==============================\n";
-	cout << "  1. Tan cong\n";
-	cout << "  2. Doi vu khi\n";
-	cout << "  3. Che tao lai vu khi\n";
-	cout << "  0. Thoat\n";
-	cout << "==============================\n";
+	cout << WHITE << "==============================" << RESET << "\n";
+	cout << B_RED    << "  1. Tan cong"     << RESET << "\n";
+	cout << B_YELLOW << "  2. Doi vu khi"   << RESET << "\n";
+	cout << B_CYAN   << "  3. Che tao lai vu khi" << RESET << "\n";
+	cout << WHITE    << "  0. Thoat"        << RESET << "\n";
+	cout << WHITE << "==============================" << RESET << "\n";
 	cout << "Lua chon: ";
 }
 
-//MAIN
+// ============================================================
+// MAIN
+// ============================================================
 int main() {
-	srand((unsigned)time(0));  // khoi tao random cho Set
+	srand((unsigned)time(0));
 	
-	Sung		sung("AK47",      35, 10.0f, 30, 2.0f);
-	Kiem		kiem("Muramasa",  50,  2.0f, 100);
-	PhepThuat	phep("Amaterasu", 60,  1.0f, "Hoa", 15);
+	Sung      sung("AK47",      35, 10.0f, 30, 2.0f);
+	Kiem      kiem("Muramasa",  50,  2.0f, 100);
+	PhepThuat phep("Amaterasu", 60,  1.0f, "Hoa", 15);
 	
-	VuKhi* vk[3] = {&sung, &kiem, &phep};
+	VuKhi* vk[3] = { &sung, &kiem, &phep };
 	
-	NhanVat nr    ("Nguoi Rom",		10000, 0);
+	NhanVat nr    ("Nguoi Rom",      10000, 0);
 	NhanVat player("Shadow Reaper", 10000, 500, vk, 0);
 	
-	//Gan nguoi dung phep sau khi player da duoc khai bao
 	phep.setNguoiDungPhep(&player);
 	
 	int lua = -1;
@@ -494,31 +594,31 @@ int main() {
 		
 		if (lua == 1) {
 			clearScreen();
-			cout << "========== MUC TIEU: " << nr.getName() << " ==========\n";
+			cout << RED << BOLD << "========== MUC TIEU: " << nr.getName() << " ==========" << RESET << "\n";
 			cout << nr;
-			cout << "PLAYER: " << player.getName()
-			<< " | HP: "   << player.getHp()
-			<< " | Mana: " << player.getMana() << "/" << player.getManaMax() << "\n";
-			cout << "===== TAN CONG =====\n";
+			cout << GREEN << "PLAYER: " << player.getName() << RESET
+			<< " | HP: " << B_GREEN << player.getHp() << RESET
+			<< " | Mana: " << B_BLUE << player.getMana() << "/" << player.getManaMax() << RESET << "\n";
+			cout << YELLOW << BOLD << "===== TAN CONG =====" << RESET << "\n";
 			player[player.getViTriDangDung()]->TanCong();
-			cout << "\nNhap thoi gian tan cong (giay): ";
+			cout << "\nNhap so luot tan cong: ";
 			int t; cin >> t;
 			int damage = player.SatThuong(t);
-			cout << "\nSat thuong gay len " << nr.getName() << ": " << damage << "\n";
+			cout << "\n" << B_RED << BOLD << "Sat thuong gay len " << nr.getName() << ": " << damage << RESET << "\n";
 			if (damage > 0) {
 				cout << endl;
 				nr.BiTanCong(damage);
 				if (nr.ConSong())
-					cout << "\n>> " << nr.getName() << " van song! HP: " << nr.getHp() << "\n";
+					cout << YELLOW << "\n>> " << nr.getName() << " van song! HP: " << nr.getHp() << RESET << "\n";
 				else
-					cout << "\n>> " << nr.getName() << " da bi ha guc!\n";
+					cout << RED << BOLD << "\n>> " << nr.getName() << " da bi ha guc!" << RESET << "\n";
 			}
 			cout << "\nNhan Enter de tiep tuc...";
 			cin.ignore(); cin.get();
 		}
 		else if (lua == 2) {
 			clearScreen();
-			cout << "===== DOI VU KHI =====\n";
+			cout << YELLOW << BOLD << "===== DOI VU KHI =====" << RESET << "\n";
 			player.trangBiHienTai();
 			cout << "Lua chon (1-3): ";
 			int chon; cin >> chon;
@@ -530,8 +630,10 @@ int main() {
 		}
 		else if (lua == 3) {
 			clearScreen();
-			cout << "===== CHE TAO VU KHI =====\n";
-			cout << "  1. Sung\n  2. Kiem\n  3. Phep Thuat\n";
+			cout << CYAN << BOLD << "===== CHE TAO VU KHI =====" << RESET << "\n";
+			cout << YELLOW << "  1. Sung"        << RESET << "\n";
+			cout << B_CYAN << "  2. Kiem"        << RESET << "\n";
+			cout << MAGENTA<< "  3. Phep Thuat"  << RESET << "\n";
 			cout << "Lua chon: ";
 			int chon; cin >> chon;
 			switch (chon) {
@@ -539,23 +641,24 @@ int main() {
 				case 2: cin >> kiem; player[1] = &kiem; player.setViTriDangDung(1); break;
 			case 3:
 				cin >> phep;
-				phep.setNguoiDungPhep(&player); // giu ket noi sau khi nhap lai
+				phep.setNguoiDungPhep(&player);
 				player[2] = &phep;
 				player.setViTriDangDung(2);
 				break;
-				default: cout << "Lua chon khong hop le!\n"; break;
+			default:
+				cout << RED << "Lua chon khong hop le!\n" << RESET; break;
 			}
-			cout << "\n>> Che tao thanh cong!\n";
+			cout << B_GREEN << "\n>> Che tao thanh cong!" << RESET << "\n";
 			cout << "Nhan Enter de tiep tuc...";
 			cin.ignore(); cin.get();
 		}
 		else if (lua == 0) {
 			clearScreen();
-			cout << "Tam biet!\n";
+			cout << B_WHITE << "Tam biet!\n" << RESET;
 			return 0;
 		}
 		else {
-			cout << "Lua chon khong hop le.\n";
+			cout << RED << "Lua chon khong hop le.\n" << RESET;
 			cout << "Nhan Enter de tiep tuc...";
 			cin.ignore(); cin.get();
 		}
@@ -563,9 +666,10 @@ int main() {
 	
 	if (!nr.ConSong()) {
 		clearScreen();
-		cout << "\n=============================\n"
-		<< "  " << nr.getName() << " DA BI TIEU DIET!\n"
-		<< "=============================\n";
+		cout << "\n" << RED << BOLD;
+		cout << "=============================\n";
+		cout << "  " << nr.getName() << " DA BI TIEU DIET!\n";
+		cout << "=============================" << RESET << "\n";
 	}
 	return 0;
 }
