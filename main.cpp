@@ -215,9 +215,9 @@ public:
 // CLASS PHEPTHUAT
 class PhepThuat : public VuKhi {
 private:
-	string   loaiPhep;
-	int      manaTieuThu;
-	NhanVat* nguoiDungPhep;  // tro toi nguoiDungPhep, truy cap mana nho friend
+	string	loaiPhep;
+	int		manaTieuThu;
+	NhanVat	*nguoiDungPhep;  // tro toi nguoiDungPhep, truy cap mana nho friend
 	
 public:
 	PhepThuat() : VuKhi(), loaiPhep("Hoa"), manaTieuThu(10), nguoiDungPhep(nullptr) {}
@@ -225,10 +225,10 @@ public:
 	: VuKhi(ten, st, td), loaiPhep(lp), manaTieuThu(mtb), nguoiDungPhep(nullptr) {}
 	~PhepThuat() {}
 	
-	string   getLoaiPhep()                 { return loaiPhep;      }
-	int      getManaTieuThu()              { return manaTieuThu;   }
-	NhanVat* getNguoiDungPhep()            { return nguoiDungPhep; }
-	void     setLoaiPhep(string lp)        { loaiPhep      = lp;   }
+	string   getLoaiPhep()                 	{ return loaiPhep;      }
+	int      getManaTieuThu()              	{ return manaTieuThu;   }
+	NhanVat*	 getNguoiDungPhep()				{ return nguoiDungPhep; }
+	void     setLoaiPhep(string lp)        	{ loaiPhep      = lp;   }
 	void     setManaTieuThu(int mtb)       { manaTieuThu   = mtb;  }
 	void     setNguoiDungPhep(NhanVat* nv) { nguoiDungPhep = nv;   }
 	
@@ -273,7 +273,7 @@ public:
 // CLASS NHANVAT
 // friend class PhepThuat -> PhepThuat truy cap mana/manaMax
 class NhanVat {
-	friend class PhepThuat;  // cho phep PhepThuat truy cap mana, manaMax
+//	friend class PhepThuat;  // cho phep PhepThuat truy cap mana, manaMax
 private:
 	string nameNV;
 	int    hp;
@@ -283,8 +283,7 @@ private:
 	int    viTriDangDung;
 	
 public:
-	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000,
-			VuKhi* _vk[] = nullptr, int vt = 0) {
+	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000, VuKhi* _vk[] = nullptr, int vt = 0) {
 		nameNV = _name;
 		hp     = _hp;
 		mana   = _mana;
@@ -351,7 +350,7 @@ void PhepThuat::TanCong() {
 	<< getTocDoRaDon()    << " don/giay." << endl;
 	cout << "    >> Mana tieu thu/don: " << manaTieuThu;
 	if (nguoiDungPhep)
-		cout << " | Mana hien tai: " << nguoiDungPhep->mana << "/" << nguoiDungPhep->manaMax;
+		cout << " | Mana hien tai: " << nguoiDungPhep->getMana()<< "/" << nguoiDungPhep->getManaMax();
 	cout << endl;
 }
 
@@ -362,9 +361,9 @@ int PhepThuat::SatThuong(int t) {
 		return 0;
 	}
 	// Kiem tra du mana it nhat 1 don
-	if (nguoiDungPhep->mana < manaTieuThu) {
+	if (nguoiDungPhep->getMana() < manaTieuThu) {
 		cout << ">> [" << getTenVuKhi() << "] Khong du mana! ("
-		<< nguoiDungPhep->mana << "/" << manaTieuThu << " can)" << endl;
+		<< nguoiDungPhep->getMana() << "/" << manaTieuThu << " can)" << endl;
 		return 0;
 	}
 	
@@ -376,23 +375,22 @@ int PhepThuat::SatThuong(int t) {
 	
 	cout << "\n[Dien bien chien dau - " << t << " giay | "
 	<< getTenVuKhi() << " - " << loaiPhep << "]" << endl;
-	cout << "  Mana luc dau: " << nguoiDungPhep->mana << "/" << nguoiDungPhep->manaMax << endl;
+	cout << "  Mana luc dau: " << nguoiDungPhep->getMana() << "/" << nguoiDungPhep->getManaMax()<< endl;
 	
 	while (thoiGianConLai >= thoiGianMoiDon) {
 		// Het mana giua chung
-		if (nguoiDungPhep->mana < manaTieuThu) {
+		if (nguoiDungPhep->getMana() < manaTieuThu) {
 			cout << "  >> Het mana! Dung danh." << endl;
 			break;
-		}
-		
-		thoiGianConLai           -= thoiGianMoiDon;
-		nguoiDungPhep->mana      -= manaTieuThu;  // tru mana truc tiep qua friend
+		}		
+		thoiGianConLai-= thoiGianMoiDon;
+		nguoiDungPhep->setMana(nguoiDungPhep->getMana() - manaTieuThu) ;  
 		soDonDaDanh++;
 		
-		int    base       = getSatThuongCoBan();
-		int    dmg        = 0;
-		int    dmgHieuUng = 0;
-		string ghiChu     = "";
+		int    base			= getSatThuongCoBan();
+		int    dmg			= 0;
+		int    dmgHieuUng	= 0;
+		string ghiChu 		= "";
 		
 		// --- HOA: dot tang theo stack max 5, moi stack +20% base ---
 		if (loaiPhep == "Hoa") {
@@ -429,13 +427,12 @@ int PhepThuat::SatThuong(int t) {
 		cout << "  Don " << setw(3) << soDonDaDanh
 		<< " | base " << setw(4) << base
 		<< " | dmg +"  << setw(5) << dmg
-		<< " | mana: " << nguoiDungPhep->mana
-		<< " " << ghiChu << endl;
+		<< " | mana: " << nguoiDungPhep->getMana() ; 
 	}
 	
 	cout << endl;
 	cout << left << setw(28) << "  Tong don da danh:"  << soDonDaDanh                                  << endl;
-	cout << left << setw(28) << "  Mana con lai:"      << nguoiDungPhep->mana << "/" << nguoiDungPhep->manaMax << endl;
+	cout << left << setw(28) << "  Mana con lai:"      << nguoiDungPhep->getMana() << "/" << nguoiDungPhep->getManaMax() << endl;
 	cout << left << setw(28) << "  Tong damage:"       << tongSatThuong                                << endl;
 	return tongSatThuong;
 }
@@ -449,7 +446,7 @@ void PhepThuat::inThongTin() {
 	cout << left << setw(25) << "Mana tieu thu/don:" << manaTieuThu         << endl;
 	if (nguoiDungPhep)
 		cout << left << setw(25) << "Mana hien tai:"
-		<< nguoiDungPhep->mana << "/" << nguoiDungPhep->manaMax << endl;
+		<< nguoiDungPhep->getMana() << "/" << nguoiDungPhep->getManaMax() << endl;
 }
 
 //ME NU
