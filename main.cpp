@@ -172,7 +172,7 @@ public:
 	void setDoBenMax(int db){ doBenMax 	= (db < 0) ? 0 : db; }
 	
 	void TanCong() override {
-		cout << B_CYAN << BOLD << "[ KIEM ]" << RESET
+		cout << YELLOW << BOLD << "[ KIEM ]" << RESET
 		<< CYAN << " [KIEM " << getTenVuKhi() << RESET << "] "
 		<< "Tan cong tam gan bang nhung nhat chem sac ben"
 		<< " - " << B_RED << getSatThuongCoBan() << " dmg/chem" << RESET
@@ -403,7 +403,7 @@ static const char* mauPhep(const string& lp) {
 
 void PhepThuat::TanCong() {
 	const char* mau = mauPhep(loaiPhep);
-	cout << mau << BOLD << "[ PHEP THUAT ]" << RESET
+	cout << mau << YELLOW << BOLD << "[ PHEP THUAT ]" << RESET
 	<< " [" << mau << getTenVuKhi() << RESET << "] "
 	<< "Loai: " << mau << BOLD << loaiPhep << RESET
 	<< " - " << B_RED << getSatThuongCoBan() << " dmg/don" << RESET
@@ -578,10 +578,10 @@ void hienThiGiaoDien(NhanVat& nr, NhanVat& p) {
 	clearScreen();
 	cout << RED << BOLD << "========== MUC TIEU: " << nr.getName() << " ==========" << RESET << "\n";
 	cout << nr;
-	cout << RED	<< "PLAYER: " <<B_WHITE<< p.getName() << RESET
-	<< " | HP: " 	<< B_RED<< p.getHp() 	<< RESET
+	cout << "PLAYER: " <<B_WHITE<< p.getName() << RESET
+	<< " | HP: " 	<< B_RED << p.getHp() 	<< RESET
 	<< " | Mana: " 	<< BLUE << p.getMana() <<B_BLUE<< "/" << p.getManaMax() << RESET << "\n";
-	cout << CYAN << "TRANG BI HIEN TAI:" << RESET << "\n";
+	cout  << "TRANG BI HIEN TAI:" << RESET << "\n";
 	p.trangBiHienTai();
 	cout << "\n";
 	cout << YELLOW << BOLD << "===== Vu Khi Dang Su Dung =====" << RESET <<endl;
