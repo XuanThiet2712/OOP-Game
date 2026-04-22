@@ -244,9 +244,7 @@ public:
 	}
 };
 
-// ============================================================
-// CLASS PHEPTHUAT  (dinh nghia day du truoc NhanVat)
-// ============================================================
+
 class PhepThuat : public VuKhi {
 private:
 	string   loaiPhep;
