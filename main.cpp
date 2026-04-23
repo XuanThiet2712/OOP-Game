@@ -228,7 +228,7 @@ public:
 		is.ignore();
 		cout << B_CYAN << BOLD << "===== VU KHI: KIEM =====" << RESET << endl;
 		cout << "Nhap ten kiem : ";
-		getline(is >> ws, ten);
+		getline(is, ten);
 		cout << "Nhap sat thuong moi don : "; 
 		is >> st;
 		cout << "Nhap toc do ra don /1s : ";  
