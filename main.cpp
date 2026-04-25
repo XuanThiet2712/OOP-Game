@@ -124,8 +124,9 @@ public:
 		
 		cout << BOLD << B_RED << left << setw(28) << "	Tong damage:"<< tongDamage << RESET << endl;
 		cout <<string(22,'=')<<endl;
-		cout <<">> Bang dan da duoc nap day lai nhu cu"<<endl;
 		soLuongDan = dungLuongBang ; 
+		cout <<">> Tran chien ket thuc , Bang dan da duoc nap day lai nhu cu"<<endl;
+		
 		return tongDamage;
 	}
 	
@@ -166,6 +167,8 @@ private:
 public:
 	Kiem() : VuKhi(), doBen(100){}
 	Kiem(string ten, int st, float td, int db) : VuKhi(ten, st, td), doBen(db){}
+	Kiem(const Kiem& other) 
+	: VuKhi(other), doBen(other.doBen) {}
 	~Kiem() {}
 	
 	int  getDoBen()			{ return doBen;    }
@@ -181,7 +184,7 @@ public:
 	}
 	
 	int SatThuong(int t) override {
-		int doBenMax = doBen ; 
+		double doBenMax = doBen ; 
 		if (doBen <= 0) {
 			cout << RED 	<< ">> Kiem da gay! Khong the tan cong!"<< RESET << endl;
 			cout << GREEN 	<<">> Vui long che tao lai Kiem " 		<< RESET << endl ;
@@ -189,15 +192,17 @@ public:
 		}
 		
 		int n   = min((int)(getTocDoRaDon() * t) , doBen); // tong don 
-	
+		
 		cout << endl << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
 		cout << ">> Tan cong trong " << t << " giay (" << n << " don)\n";
-		int tongDamage = getSatThuongCoBan()/(float)(2*doBen) * n * (2*doBen - n + 1 ) ;
+		
+		int tongDamage = getSatThuongCoBan()/(float)(2*doBen) * n * (2*doBen - n + 1 ) ; // tinh dame ; 
 		
 		cout << ">> Tong sat thuong: " << B_RED	<< tongDamage << RESET << endl;
+		
 		cout << ">> Do ben con lai:  ";
 		if (doBen <= 0) 	cout << RED    << doBen << "/" << doBenMax << " [GAY!]"	<< RESET;
-		else if (doBen < 30)cout << YELLOW << doBen << "/" << doBenMax << " [THAP!]"<< RESET;
+		else if (doBen/doBenMax < 0.3f  )cout << YELLOW << doBen << "/" << doBenMax << " [THAP!]"<< RESET;
 		else				cout << GREEN  << doBen << "/" << doBenMax 				<< RESET;
 		cout << endl;
 		if (doBen > 0) {
@@ -207,6 +212,7 @@ public:
 		else {
 			cout <<">> Kiem da gay, hay che tao lai !"<<endl;
 		}
+		
 		return tongDamage;
 	}
 	
@@ -280,14 +286,14 @@ public:
 		cout << "Nhap toc do ra don     : "; is >> td;
 		cout << "Nhap mana tieu thu/don : "; is >> mtb;
 		cout << "\nChon loai phep:" << endl;
-		cout << "  " << RED    << "1. Hoa   (moi don gay them 10% sat thuong goc, chay am i)"      << RESET << endl;
-		cout << "  " << YELLOW << "2. Lou   (moi 5 don binh thuong, don thu 6 x3 sat thuong)"      << RESET << endl;
-		cout << "  " << B_CYAN << "3. Phong (sat thuong cong don tang dan theo so don da danh)"    << RESET << endl;
+		cout << "  " << RED    << "1. Hoa   (moi don gay them 10% sat thuong goc, chay am i)"         << RESET << endl;
+		cout << "  " << YELLOW << "2. Loi   (moi 5 don binh thuong, don thu 6 CRIT x2 sat thuong)"    << RESET << endl;
+		cout << "  " << B_CYAN << "3. Phong (sat thuong +1%/don, reset chuoi khi can hoi mana)"       << RESET << endl;
 		cout << "Lua chon (1-3): ";
 		int chon; is >> chon;
 		switch (chon) {
 			case 1: lp = "Hoa";   break;
-			case 2: lp = "Lou";   break;
+			case 2: lp = "Loi";   break;
 			case 3: lp = "Phong"; break;
 			default: lp = "Hoa";  cout << "Khong hop le, mac dinh Hoa." << endl;
 		}
@@ -307,7 +313,7 @@ private:
 	int    manaMax;
 	int    hoiManaPerSec;   // mana hoi lai moi giay (mac dinh 5)
 	VuKhi* vk[3];			// sung - kiem - phep 
-	int    viTriDangDung;
+	int    viTriDangDung;   // vi tri dung vu khi 
 	
 public:
 	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000, VuKhi* _vk[] = nullptr, int vt = 0, int hm = 5)
@@ -387,17 +393,13 @@ public:
 	}
 };
 
-// ============================================================
-// PHEPTHUAT – dinh nghia cac ham sau khi NhanVat da khai bao
-// ============================================================
-
-// Helper: tra ve mau tuong ung voi loai phep
+//// PHEP THUAT
 static const char* mauPhep(const string& lp) {
 	if (lp == "Hoa")   return RED;
-	if (lp == "Lou")   return YELLOW;
+	if (lp == "Loi")  return YELLOW;
 	if (lp == "Phong") return B_CYAN;
 	return WHITE;
-}
+}		// mau loai phep 
 
 void PhepThuat::TanCong() {
 	const char* mau = mauPhep(loaiPhep);
@@ -412,10 +414,10 @@ void PhepThuat::TanCong() {
 		cout << RED << "    >> [HOA PHAP] "
 		<< "Moi don gay them " << (int)(getSatThuongCoBan() * 0.1f)
 		<< " dmg thieu dot (10% sat thuong goc). Lua thieu ngay cang hung han!" << RESET << endl;
-	} else if (loaiPhep == "Lou") {
-		cout << YELLOW << "    >> [LOU PHAP] "
-		<< "Danh 5 don binh thuong, don thu 6 phong thien lat dat x3 ("
-		<< getSatThuongCoBan() * 3 << " dmg). Chu ky cu tiep tuc!" << RESET << endl;
+	} else if (loaiPhep == "Loi") {
+		cout << YELLOW << "    >> [LOI PHAP] "
+		<< "Danh 5 don binh thuong, don thu 6 no CRIT x2 ("
+		<< getSatThuongCoBan() * 2 << " dmg). Chu ky cu tiep tuc!" << RESET << endl;
 	} else if (loaiPhep == "Phong") {
 		cout << B_CYAN << "    >> [PHONG PHAP] "
 		<< "Sat thuong cong don cang danh cang manh, moi don danh ke tiep khong ngung nghi se duoc + them 1% damage" << RESET << endl;
@@ -428,84 +430,83 @@ int PhepThuat::SatThuong(int t) {
 		return 0;
 	}
 	
-	const char* mau          = mauPhep(loaiPhep);
-	const int   base         = getSatThuongCoBan();
-	const float thoiGian1Don = 1.0f / getTocDoRaDon();  // giay/don
-	const int   hoiMana1s    = nguoiDungPhep->getHoiManaPerSec();
-	const int   manaMax      = nguoiDungPhep->getManaMax();
-	int         manaHienTai  = nguoiDungPhep->getMana();
+	const char* mau         = mauPhep(loaiPhep);
+	const int   base        = getSatThuongCoBan();
+	const int   hoiMana1s   = nguoiDungPhep->getHoiManaPerSec();
+	const int   manaMax     = nguoiDungPhep->getManaMax();
+	const float thoiGian1Don = 1.0f / getTocDoRaDon(); // giay / 1 don
 	
-	// ── Tinh so don co the ra trong t giay ──────────────────────────────
-	// Mana net tieu thu moi don (sau khi tru hoi mana trong thoiGian1Don)
-	int manaNetMoiDon = manaTieuThu - (int)(hoiMana1s * thoiGian1Don);
-	if (manaNetMoiDon < 0) manaNetMoiDon = 0;
-	
-	// Neu mana ban dau khong du don dau, can doi de hoi
-	float tChoHoi = 0.0f;
+	// ── Kiem tra ban dau ────────────────────────────────────────────────
+	int manaHienTai = nguoiDungPhep->getMana();
 	if (manaHienTai < manaTieuThu) {
+		// Tinh thoi gian hoi du mana cho don dau
 		if (hoiMana1s <= 0) {
-			cout << RED << BOLD << "!! CANH BAO: Khong du mana, khong the hoi!" << RESET << endl;
+			cout << RED << BOLD << "!! Khong du mana va khong the hoi!" << RESET << endl;
 			return 0;
 		}
-		tChoHoi = (float)(manaTieuThu - manaHienTai) / hoiMana1s;
-		if (tChoHoi > t) {
-			cout << RED << BOLD << "!! CANH BAO: Khong du mana va khong the hoi kip trong "
-			<< t << " giay!" << RESET << endl;
+		float tHoi = (float)(manaTieuThu - manaHienTai) / hoiMana1s;
+		if (tHoi > t) {
+			cout << RED << BOLD << "!! Khong the hoi du mana trong " << t << " giay!" << RESET << endl;
 			return 0;
 		}
-		manaHienTai += (int)(hoiMana1s * tChoHoi);
 	}
 	
-	// So don toi da trong thoi gian con lai
-	float tHieuQua  = t - tChoHoi;
-	int   soDon     = (int)(tHieuQua / thoiGian1Don);
+	// ── Mo phong theo chu ky: danh het mana -> hoi -> danh tiep ────────
+	// Trong luc danh: KHONG hoi mana
+	// Het mana: dung lai, hoi mana (tính thoi gian cho), roi danh tiep
+	int   tongDamage  = 0;
+	int   soDon       = 0;
+	int   soCrit      = 0;   // Loi: dem so lan crit
+	int   donPhong    = 0;   // Phong: vi tri don trong chuoi (reset khi het mana)
+	float tHienTai    = 0.0f;
+	int   manaHT      = manaHienTai;
 	
-	// Gioi han boi mana: neu manaNetMoiDon > 0, mana se can dan theo so don
-	if (manaNetMoiDon > 0) {
-		int donToiDaMana = manaHienTai / manaNetMoiDon;
-		if (soDon > donToiDaMana) soDon = donToiDaMana;
+	while (tHienTai < (float)t) {
+		// Neu khong du mana: hoi mana, tinh thoi gian cho
+		if (manaHT < manaTieuThu) {
+			if (hoiMana1s <= 0) break; // khong the hoi, dung
+			int canHoi      = manaTieuThu - manaHT;
+			float tChoHoi   = (float)canHoi / hoiMana1s;
+			tHienTai       += tChoHoi;
+			if (tHienTai >= (float)t) break; // het gio trong luc hoi
+			manaHT         += canHoi; // du mana cho 1 don
+			donPhong        = 0;      // Phong: het mana -> reset chuoi ve x1
+		}
+		
+		// Kiem tra con du gio danh 1 don khong
+		if (tHienTai + thoiGian1Don > (float)t) break;
+		
+		// Danh don (khong hoi mana trong luc danh)
+		manaHT     -= manaTieuThu;
+		tHienTai   += thoiGian1Don;
+		soDon++;
+		
+		if (loaiPhep == "Hoa") {
+			tongDamage += (int)(base * 1.1f);
+			
+		} else if (loaiPhep == "Loi") {
+			if (soDon % 6 == 0) {
+				tongDamage += base * 2;
+				soCrit++;
+			} else {
+				tongDamage += base;
+			}
+			
+		} else if (loaiPhep == "Phong") {
+			float nhan = min(1.0f + donPhong * 0.01f, 3.0f);
+			tongDamage += (int)(base * nhan);
+			donPhong++;
+		}
 	}
+	
+	nguoiDungPhep->setMana(manaHT > manaMax ? manaMax : (manaHT < 0 ? 0 : manaHT));
+	
 	if (soDon <= 0) {
-		cout << RED << ">> Khong du mana de ra bat ky don nao!" << RESET << endl;
+		cout << RED << ">> Khong du mana va thoi gian de ra bat ky don nao!" << RESET << endl;
 		return 0;
 	}
 	
-	// ── Tinh sat thuong co ban ───────────────────────────────────────────
-	int tongDameCoBan = soDon * base;
-	
-	// ── Tinh hieu ung theo loai phep ─────────────────────────────────────
-	int tongDameHieuUng = 0;
-	int donLou3x = 0;   // dem so lan don thu 6 (Lou)
-	
-	if (loaiPhep == "Hoa") {
-		// Moi don cong them 10% sat thuong goc (thieu dot)
-		int dotMoiDon = (int)(base * 0.1f);
-		tongDameHieuUng = soDon * dotMoiDon;
-	}
-	else if (loaiPhep == "Lou") {
-		// Cu moi 5 don thi don thu 6 x3 (thay vi x1, cong them 2*base)
-		// Chu ky 6 don: 5 don thuong + 1 don siet
-		donLou3x = soDon / 6;           // so lan don thu 6 xuat hien
-		tongDameHieuUng = donLou3x * 2 * base;  // moi lan x3 = base*3, da tinh base*1 trong co ban, nen bonus = base*2
-	}
-	else if (loaiPhep == "Phong") {
-		// Don thu i co boSuc = min(1 + (i-1)*0.1, 3.0) -> bonus = base*(boSuc-1)
-		int donTangDan = min(soDon, 21);
-		int donMax     = max(0, soDon - 21);
-		int bonusTangDan = 0;
-		for (int i = 1; i <= donTangDan; i++)
-			bonusTangDan += (int)(base * (i - 1) * 0.1f);
-		tongDameHieuUng = bonusTangDan + donMax * 2 * base;
-	}
-	
-	// ── Cap nhat mana ────────────────────────────────────────────────────
-	int manaThucTieu = soDon * manaNetMoiDon;
-	manaHienTai = max(0, min(manaHienTai - manaThucTieu, manaMax));
-	nguoiDungPhep->setMana(manaHienTai);
-	
 	// ── In ket qua ───────────────────────────────────────────────────────
-	int tongDamage = tongDameCoBan + tongDameHieuUng;
-	
 	cout << endl;
 	cout << mau << BOLD
 	<< "[=== KET QUA: " << getTenVuKhi() << " | " << loaiPhep << " | " << t << " giay ===]"
@@ -515,28 +516,26 @@ int PhepThuat::SatThuong(int t) {
 	cout << left << setw(30) << "  Tong don da danh:"
 	<< B_WHITE << soDon << " don" << RESET << endl;
 	
-	if (tChoHoi > 0)
-		cout << left << setw(30) << "  Thoi gian cho hoi mana:"
-		<< YELLOW << (int)tChoHoi << "s" << RESET << endl;
-	
-	cout << left << setw(30) << "  Sat thuong co ban:"
-	<< B_RED << tongDameCoBan << RESET << endl;
-	
-	if (loaiPhep == "Hoa" && tongDameHieuUng > 0) {
-		cout << left << setw(30) << "  Thieu dot (10%/don):"
-		<< RED << "+" << tongDameHieuUng
-		<< " (" << soDon << " don x " << (int)(base*0.1f) << " dmg/don)" << RESET << endl;
-	}
-	else if (loaiPhep == "Lou") {
-		cout << left << setw(30) << "  Don siet (x3) xuat hien:"
-		<< YELLOW << donLou3x << " lan" << RESET << endl;
-		if (tongDameHieuUng > 0)
-			cout << left << setw(30) << "  Bonus Lou (x3 moi 6 don):"
-			<< YELLOW << BOLD << "+" << tongDameHieuUng << RESET << endl;
-	}
-	else if (loaiPhep == "Phong" && tongDameHieuUng > 0) {
-		cout << left << setw(30) << "  Bonus phong (tang dan):"
-		<< B_CYAN << "+" << tongDameHieuUng << RESET << endl;
+	if (loaiPhep == "Hoa") {
+		cout << left << setw(30) << "  Cong thuc:"
+		<< RED << soDon << " don x " << base << " x 1.1 (thieu dot +10%/don)" << RESET << endl;
+		
+	} else if (loaiPhep == "Loi") {
+		int donThuong = soDon - soCrit;
+		cout << left << setw(30) << "  So lan CRIT (don thu 6):"
+		<< YELLOW << BOLD << soCrit << " lan crit!" << RESET << endl;
+		cout << left << setw(30) << "  Cong thuc:"
+		<< YELLOW << donThuong << " don x " << base
+		<< " + " << soCrit << " crit x " << base*2 << " (x2)" << RESET << endl;
+		
+	} else if (loaiPhep == "Phong") {
+		float nhanCuoi = min(1.0f + (donPhong - 1) * 0.01f, 3.0f);
+		cout << left << setw(30) << "  Nhan cuoi cung dat duoc:"
+		<< B_CYAN << "x" << fixed << setprecision(2) << nhanCuoi
+		<< " (+" << (donPhong-1) << "% sau " << donPhong << " don)" << RESET << endl;
+		cout << left << setw(30) << "  Cong thuc:"
+		<< B_CYAN << "sum(base * (1 + i*1%)), i=0.." << (soDon-1)
+		<< " | reset khi can hoi mana" << RESET << endl;
 	}
 	
 	cout << WHITE << string(50, '-') << RESET << endl;
@@ -561,12 +560,12 @@ void PhepThuat::inThongTin() {
 	// Mo ta hieu ung
 	if (loaiPhep == "Hoa")
 		cout << RED    << "  >> Hieu ung: Moi don thieu dot them " << (int)(getSatThuongCoBan()*0.1f)
-		<< " dmg (10% sat thuong goc)" << RESET << endl;
-	else if (loaiPhep == "Lou")
-		cout << YELLOW << "  >> Hieu ung: Don thu 6 trong moi chu ky 6 don x3 sat thuong ("
-		<< getSatThuongCoBan()*3 << " dmg)" << RESET << endl;
+		<< " dmg (+10% moi don)" << RESET << endl;
+	else if (loaiPhep == "Loi")
+		cout << YELLOW << "  >> Hieu ung: Don thu 6 trong chu ky 6 don no CRIT x2 ("
+		<< getSatThuongCoBan()*2 << " dmg). Het mana se hoi va danh tiep!" << RESET << endl;
 	else if (loaiPhep == "Phong")
-		cout << B_CYAN << "  >> Hieu ung: Sat thuong tang dan moi don (+10%/don, toi da x3 tu don 21)" << RESET << endl;
+		cout << B_CYAN << "  >> Hieu ung: +1%/don (don 1=x1.00, don 100=x2.00, max x3.00). Het mana: hoi mana, reset chuoi ve x1!" << RESET << endl;
 }
 
 // MENU CHINH
