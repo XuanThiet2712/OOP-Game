@@ -27,7 +27,7 @@ using namespace std;
 void clearScreen() {
 #ifdef _WIN32
 	system("cls");
-#else
+#else3
 	system("clear");
 #endif
 }
@@ -46,15 +46,15 @@ public:
 	VuKhi(const VuKhi& vk)
 	: tenVuKhi(vk.tenVuKhi), satThuongCoBan(vk.satThuongCoBan), tocDoRaDon(vk.tocDoRaDon) {}
 	virtual ~VuKhi() {}
-	
+	// get 
 	string	getTenVuKhi()		{ return tenVuKhi;			}
 	int		getSatThuongCoBan()	{ return satThuongCoBan;	}
 	float	getTocDoRaDon()		{ return tocDoRaDon;		}
-	
+	// set
 	void setTenVuKhi(string ten)	{ tenVuKhi			= ten;	}
 	void setSatThuongCoBan(int st)	{ satThuongCoBan	= st;	}
 	void setTocDoRaDon(float td)	{ tocDoRaDon		= td;	}
-	
+	// 
 	virtual void TanCong()			= 0;
 	virtual int  SatThuong(int t)	= 0;
 	virtual void inThongTin()		= 0;
@@ -69,9 +69,10 @@ public:
 	Sung() : VuKhi(), soLuongDan(30), tocDoThayBang(2) {}
 	Sung(string ten, int st, float td, int sld, float tdb)
 	: VuKhi(ten, st, td), soLuongDan(sld), tocDoThayBang(tdb) {}
-//	Sung(const Sung& sg){
-//		
-//	}
+	Sung(const Sung& sg):VuKhi(sg){
+		soLuongDan = sg.soLuongDan ;
+		tocDoThayBang = sg.tocDoThayBang ; 
+	}
 	~Sung(){}
 	
 	void TanCong() override {
