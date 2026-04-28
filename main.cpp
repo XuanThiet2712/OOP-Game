@@ -79,9 +79,9 @@ public:
 	void TanCong() override {
 		cout << YELLOW << BOLD << "[ SUNG ]" << RESET
 		<< CYAN << " [SUNG " << getTenVuKhi() << RESET << "] "
-		<< "Tan cong tam xa bang nhung vien dan chay bong"
-		<< " - " << B_RED << getSatThuongCoBan() << " dmg/vien" << RESET
-		<< ", " << getTocDoRaDon() << " dan/giay." << endl;
+		<< "Tan cong tam xa bang nhung vien dan chay bong"<<endl;
+//		<< " - " << B_RED << getSatThuongCoBan() << " dmg/vien" << RESET
+//		<< ", " << getTocDoRaDon() << " dan/giay." << endl;
 	}
 	//Tinh dame tan cong sau t giay 
 	int SatThuong(int t) override {
@@ -185,9 +185,9 @@ public:
 	void TanCong() override {
 		cout << YELLOW << BOLD << "[ KIEM ]" << RESET
 		<< CYAN << " [KIEM " << getTenVuKhi() << RESET << "] "
-		<< "Tan cong tam gan bang nhung nhat chem sac ben"
-		<< " - " << B_RED << getSatThuongCoBan() << " dmg/chem" << RESET
-		<< ", " << getTocDoRaDon() << " chem/giay." << endl;
+		<< "Tan cong tam gan bang nhung nhat chem sac ben";
+//		<< " - " << B_RED << getSatThuongCoBan() << " dmg/chem" << RESET
+//		<< ", " << getTocDoRaDon() << " chem/giay." << endl;
 		cout << endl;
 	}
 	
@@ -429,29 +429,27 @@ static const char* mauPhep(const string& lp) {
 void PhepThuat::TanCong() {
 	const char* mau = mauPhep(loaiPhep);
 	cout << mau << YELLOW << BOLD << "[ PHEP THUAT ]" << RESET
-	<< " [" << mau << getTenVuKhi() << RESET << "] "
-	<< "Loai: " << mau << BOLD << loaiPhep << RESET
-	<< " - " << B_RED << getSatThuongCoBan() << " dmg/don" << RESET
-	<< ", " << getTocDoRaDon() << " don/giay." << endl;
+	<< " [" << B_BLUE << getTenVuKhi() << RESET << "] "
+	<< " Su dung 1 nang luc tam linh ky la tan cong vao ke dich " <<endl ; 
 	
 	// Mo ta hieu ung rieng tung loai phep
 	if (loaiPhep == "Hoa") {
-		cout << RED << "    >> [HOA PHAP] "
+		cout << RED << "    >> [HOA PHAP] "		<< RESET 
 		<< "Moi don gay them " << (int)(getSatThuongCoBan() * 0.1f)
 		<< " dmg thieu dot (10% sat thuong goc). Lua thieu ngay cang hung han!" << RESET << endl;
 	} else if (loaiPhep == "Loi") {
-		cout << YELLOW << "    >> [LOI PHAP] "
+		cout << YELLOW << "    >> [LOI PHAP] "  << RESET 
 		<< "Danh 5 don binh thuong, don thu 6 no CRIT x2 ("
 		<< getSatThuongCoBan() * 2 << " dmg). Chu ky cu tiep tuc!" << RESET << endl;
 	} else if (loaiPhep == "Phong") {
-		cout << B_CYAN << "    >> [PHONG PHAP] "
+		cout << B_CYAN << "    >> [PHONG PHAP] " << RESET 
 		<< "Sat thuong cong don cang danh cang manh, moi don danh ke tiep khong ngung nghi se duoc + them 1% damage" << RESET << endl;
 	}
 }
 
 int PhepThuat::SatThuong(int t) {
 	if (!nguoiDungPhep) {
-		cout << RED << ">> [" << getTenVuKhi() << "] Chua gan nguoi dung phep!" << RESET << endl;
+		cout << RED << ">> [" << getTenVuKhi() << "] Chua biet nguoi dung phep!" << RESET << endl;
 		return 0;
 	}
 	
@@ -461,7 +459,7 @@ int PhepThuat::SatThuong(int t) {
 	const int   manaMax     = nguoiDungPhep->getManaMax();
 	const float thoiGian1Don = 1.0f / getTocDoRaDon(); // giay / 1 don
 	
-	// ── Kiem tra ban dau ────────────────────────────────────────────────
+	// ── Kiem tra ban dau 
 	int manaHienTai = nguoiDungPhep->getMana();
 	if (manaHienTai < manaTieuThu) {
 		// Tinh thoi gian hoi du mana cho don dau
