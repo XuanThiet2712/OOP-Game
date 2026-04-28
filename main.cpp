@@ -27,7 +27,7 @@ using namespace std;
 void clearScreen() {
 #ifdef _WIN32
 	system("cls");
-#else3
+#else
 	system("clear");
 #endif
 }
@@ -66,6 +66,7 @@ private:
 	int		soLuongDan;
 	float 	tocDoThayBang;
 public:
+	//constructor / destructor 
 	Sung() : VuKhi(), soLuongDan(30), tocDoThayBang(2) {}
 	Sung(string ten, int st, float td, int sld, float tdb)
 	: VuKhi(ten, st, td), soLuongDan(sld), tocDoThayBang(tdb) {}
@@ -74,7 +75,7 @@ public:
 		tocDoThayBang = sg.tocDoThayBang ; 
 	}
 	~Sung(){}
-	
+	//Mo ta cach tan cong cua Sung
 	void TanCong() override {
 		cout << YELLOW << BOLD << "[ SUNG ]" << RESET
 		<< CYAN << " [SUNG " << getTenVuKhi() << RESET << "] "
@@ -82,9 +83,9 @@ public:
 		<< " - " << B_RED << getSatThuongCoBan() << " dmg/vien" << RESET
 		<< ", " << getTocDoRaDon() << " dan/giay." << endl;
 	}
-	
+	//Tinh dame tan cong sau t giay 
 	int SatThuong(int t) override {
-		int dungLuongBang	= soLuongDan;
+		int dungLuongBang = soLuongDan;
 		
 		float thoiGianBanHetDan	= dungLuongBang / getTocDoRaDon();
 		float tChuKy = thoiGianBanHetDan + tocDoThayBang;
@@ -130,7 +131,7 @@ public:
 		
 		return tongDamage;
 	}
-	
+	// In thong tin trang thai vu khi hien tai 
 	void inThongTin() override {
 		cout << "Player dang su dung " << CYAN  << BOLD<< "SUNG " << getTenVuKhi() 	<< RESET << endl;
 		cout << left << setw(22) << "Sat thuong/vien:"	<< B_RED	<< getSatThuongCoBan()				<< RESET << endl;
@@ -166,10 +167,16 @@ class Kiem : public VuKhi {
 private:
 	int doBen;
 public:
-	Kiem() : VuKhi(), doBen(100){}
-	Kiem(string ten, int st, float td, int db) : VuKhi(ten, st, td), doBen(db){}
+	//constructor 
+	Kiem() : VuKhi(){
+		doBen = 100 ; 
+	}
+	Kiem(string ten, int st, float td, int db) : VuKhi(ten, st, td){
+		doBen = db ; 
+	}
 	Kiem(const Kiem& other) 
 	: VuKhi(other), doBen(other.doBen) {}
+	//destructor 
 	~Kiem() {}
 	
 	int  getDoBen()			{ return doBen;    }
@@ -260,6 +267,11 @@ public:
 	PhepThuat() : VuKhi(), loaiPhep("Hoa"), manaTieuThu(10), nguoiDungPhep(nullptr) {}
 	PhepThuat(string ten, int st, float td, string lp = "Hoa", int mtb = 10)
 	: VuKhi(ten, st, td), loaiPhep(lp), manaTieuThu(mtb), nguoiDungPhep(nullptr) {}
+	PhepThuat(const PhepThuat& pt):VuKhi(pt){
+		loaiPhep = pt.loaiPhep ; 
+		manaTieuThu = pt.manaTieuThu ;
+		nguoiDungPhep = pt.nguoiDungPhep ; 
+	}
 	~PhepThuat() {}
 	
 	string   getLoaiPhep(){ return loaiPhep;       }
@@ -274,8 +286,8 @@ public:
 	int  SatThuong(int t) override;
 	void inThongTin()     override;
 	
-	friend ostream& operator<<(ostream& out, PhepThuat x) { 
-		x.inThongTin(); 
+	friend ostream& operator<<(ostream& out, PhepThuat p) { 
+		p.inThongTin(); 
 		return out; 
 	}
 	friend istream& operator>>(istream& is,  PhepThuat& p) {
@@ -310,18 +322,30 @@ class NhanVat {
 private:
 	string nameNV;
 	int    hp;
-	int    mana;
+	int    mana; // mana hien tai 
 	int    manaMax;
-	int    hoiManaPerSec;   // mana hoi lai moi giay (mac dinh 5)
+	int    hoiMana;   // mana hoi lai moi giay (mac dinh 5)
 	VuKhi* vk[3];			// sung - kiem - phep 
 	int    viTriDangDung;   // vi tri dung vu khi 
 	
 public:
-	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000, VuKhi* _vk[] = nullptr, int vt = 0, int hm = 5)
-	: nameNV(_name), hp(_hp), mana(_mana), manaMax(_mana),hoiManaPerSec(hm), viTriDangDung(vt)
+	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000,int _manaMax = 1000 , int hm = 5 ,  VuKhi* _vk[] = nullptr, int vt = 0)
+	: nameNV(_name), hp(_hp), mana(_mana), manaMax(_manaMax),hoiMana(hm), viTriDangDung(vt)
 	{
 		for (int i = 0; i < 3; i++)
 			vk[i] = (_vk ? _vk[i] : nullptr);
+	}
+	NhanVat(const NhanVat& x){
+		nameNV = x.nameNV ; 
+		hp = x.hp ; 
+		mana = x.mana ; 
+		manaMax = x.manaMax ; 
+		for (int i = 0; i < 3; i++){
+			vk[i] = x.vk[i];
+		}
+
+		viTriDangDung = x.viTriDangDung ; 
+		hoiMana = x.hoiMana ; 
 	}
 	~NhanVat() {}
 	
@@ -329,34 +353,34 @@ public:
 	int		getHp()				{ return hp;            }
 	int		getMana()			{ return mana;			}
 	int		getManaMax(){ return manaMax;				}
-	int		getHoiManaPerSec(){ return hoiManaPerSec; }
+	int		getHoiMana(){ return hoiMana; }
 	int		getViTriDangDung(){ return viTriDangDung; }
 	
 	void setName(string _name)		{ nameNV = _name; }
 	void setHp(int _hp)				{ hp    = (_hp   < 0) ? 0 : _hp; }
 	void setMana(int _mana)			{ mana  = (_mana < 0) ? 0 : (_mana > manaMax ? manaMax : _mana); }
-	void setHoiManaPerSec(int hm)	{ hoiManaPerSec = (hm < 0) ? 0 : hm; }
+	void setHoiMana(int hm)	{ hoiMana = (hm < 0) ? 0 : hm; }
 	void setViTriDangDung(int vt)	{ viTriDangDung = vt; }
 	
 	// Hoi mana trong t giay 
 	int HoiMana(int t) {
-		int tongHoi = hoiManaPerSec * t;
+		int tongHoi = hoiMana * t;
 		int truoc	= mana;
 		setMana(mana + tongHoi);
 		return mana - truoc;   // tra ve so mana thuc su hoi duoc
 	}
-	
+	// trang bi vu khi dang su dung hien tai , bao gom sung kiem phep thuat
 	void trangBiHienTai() {
 		for (int i = 0; i < 3; i++) {
 			cout << B_WHITE << "[" << i+1 << "] " << RESET;
 			vk[i]->TanCong();
 		}
 	}
-	
+	// vu khi dang su dung
 	VuKhi*& operator[](int index) { 
 		return vk[index]; 
 	}
-	
+	//sat thuong vu khi hien tai gay ra trong t giay 
 	int SatThuong(int t) {
 		VuKhi* v = vk[viTriDangDung];
 		if (!v) { 
@@ -364,7 +388,7 @@ public:
 		}
 		return v->SatThuong(t);
 	}
-	
+	// nhan vat bi tan cong 
 	void BiTanCong(int st) {
 		int hpTruoc = hp;
 		hp -= st;
@@ -372,25 +396,25 @@ public:
 		cout << RED << ">> " << nameNV << " bi tan cong" << RESET << endl;
 		cout << "	HP: " << B_GREEN << hpTruoc << RESET << " -> " << B_RED << hp << RESET << endl;
 	}
-	
+	// kiem tra trang thai con song hay da chet cua nhan vat 
 	bool ConSong(){ 
 		return hp > 0; 
 	}
 	
-	friend ostream& operator<<(ostream& out, NhanVat nv) {
-		out << left << setw(22) << "Ten:"  << B_WHITE  << nv.nameNV	<< RESET << endl;
-		out << left << setw(22) << "HP:"   << B_RED  << nv.hp 		<< RESET << endl;
-		out << left << setw(22) << "Mana:" << BLUE   << nv.mana <<B_BLUE<< "/" << nv.manaMax << RESET << endl;
-		out << left << setw(22) << "Hoi mana/giay:" << B_BLUE << nv.hoiManaPerSec << RESET << endl;
-		out << CYAN << "========================================" << RESET << endl;
-		return out;
-	}
 	friend istream& operator>>(istream& in, NhanVat& nv) {
 		cout << "Nhap ten nhan vat: "; in.ignore(); getline(in, nv.nameNV);
 		cout << "Nhap HP: ";   in >> nv.hp;
 		cout << "Nhap Mana: "; in >> nv.mana;
 		nv.manaMax = nv.mana;
 		return in;
+	}
+	friend ostream& operator<<(ostream& out, NhanVat nv) {
+		out << left << setw(22) << "Ten:"  << B_WHITE  << nv.nameNV	<< RESET << endl;
+		out << left << setw(22) << "HP:"   << B_RED  << nv.hp 		<< RESET << endl;
+		out << left << setw(22) << "Mana:" << BLUE   << nv.mana <<B_BLUE<< "/" << nv.manaMax << RESET << endl;
+		out << left << setw(22) << "Hoi mana/giay:" << B_BLUE << nv.hoiMana << RESET << endl;
+		out << CYAN << "========================================" << RESET << endl;
+		return out;
 	}
 };
 
@@ -433,7 +457,7 @@ int PhepThuat::SatThuong(int t) {
 	
 	const char* mau         = mauPhep(loaiPhep);
 	const int   base        = getSatThuongCoBan();
-	const int   hoiMana1s   = nguoiDungPhep->getHoiManaPerSec();
+	const int   hoiMana1s   = nguoiDungPhep->getHoiMana();
 	const int   manaMax     = nguoiDungPhep->getManaMax();
 	const float thoiGian1Don = 1.0f / getTocDoRaDon(); // giay / 1 don
 	
@@ -603,8 +627,8 @@ int main() {
 	
 	VuKhi* vk[3] = { &sung, &kiem, &phep };
 	
-	NhanVat nr		("BAC NONG DAN ",	 10000, 100);
-	NhanVat player	("Shadow Reaper",10000, 500, vk, 0);
+	NhanVat nr		("BAC NONG DAN ",	 10000, 100 , 100 );
+	NhanVat player	("Shadow Reaper",10000, 500 , 500 ,5 ,  vk, 0);
 	
 	phep.setNguoiDungPhep(&player);
 	
