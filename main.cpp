@@ -152,11 +152,11 @@ istream& operator>>(istream& is, Sung& sg) {
 	cout << YELLOW << BOLD << "===== VU KHI: SUNG =====" << RESET << endl;
 	cout << "Moi ban nhap ten Sung : "; 								getline(is, name);
 	cout << "Moi ban nhap sat thuong / vien dan : ";					is >> damage;
-	cout << "Moi ban nhap toc do ban / 1s (dan ban duoc trong 1s): ";	is >> td;
+	cout << "Moi ban nhap toc do ban (dan ban duoc trong 1s): ";		is >> td;
 	sg.setTenVuKhi(name); 
 	sg.setSatThuongCoBan(damage); 
 	sg.setTocDoRaDon(td);
-	cout << "Moi ban nhap so luong dan (so luong bang dan) : ";			is >> sg.soLuongDan;
+	cout << "Moi ban nhap so luong dan : ";								is >> sg.soLuongDan;
 	cout << "Moi ban nhap toc do thay bang (giay) : ";					is >> sg.tocDoThayBang;
 	return is;
 }
@@ -204,7 +204,7 @@ public:
 		int tongDamage = getSatThuongCoBan()/(float)(2*doBen) * n * (2*doBen - n + 1 ) ; // tinh dame ; 
 		
 		cout << ">> Tong sat thuong: " << B_RED	<< tongDamage << RESET << endl;
-		
+		doBen -= n ; 
 		cout << ">> Do ben con lai:  ";
 		if (doBen <= 0) 	cout << RED    << doBen << "/" << doBenMax << " [GAY!]"	<< RESET;
 		else if (doBen/doBenMax < 0.3f  )cout << YELLOW << doBen << "/" << doBenMax << " [THAP!]"<< RESET;
@@ -212,10 +212,11 @@ public:
 		cout << endl;
 		if (doBen > 0) {
 			doBen = doBenMax ;
+			cout <<string(70,'=')<<endl;
 			cout <<">> Sau khi chien dau xong,thanh kiem da duoc mai lai ve 100% do ben nhu cu"<<endl;
 		}
 		else {
-			cout <<">> Kiem da gay, hay che tao lai !"<<endl;
+			cout <<RED<<">> Kiem da gay, hay che tao lai !"<<endl;
 		}
 		
 		return tongDamage;
@@ -226,9 +227,6 @@ public:
 		cout << left << setw(22) << "Sat thuong/don:"	<< B_RED	<< getSatThuongCoBan()			<< RESET << endl;
 		cout << left << setw(22) << "Toc do:"			<< B_YELLOW << getTocDoRaDon() << " don/s"	<< RESET << endl;
 		cout << left << setw(22) << "Do ben:";
-		if (doBen <= 0)		cout << RED		<< doBen << " [GAY!]"	<< RESET;
-		else if (doBen < 30)cout << YELLOW << doBen << " [THAP!]"	<< RESET;
-		else				cout << GREEN  << doBen 					<< RESET;
 		cout << endl;
 	}
 	
@@ -570,12 +568,11 @@ int PhepThuat::SatThuong(int t) {
 
 void PhepThuat::inThongTin() {
 	const char* mau = mauPhep(loaiPhep);
-	cout << left << setw(25)<< "Player dang su dung " << mau << BOLD << "VU KHI: Phep Thuat "
-	<< getTenVuKhi() << RESET << endl;
-	cout << left << setw(25) << "Loai phep:"         << mau << BOLD << loaiPhep            << RESET << endl;
-	cout << left << setw(25) << "Sat thuong co ban:" << B_RED    << getSatThuongCoBan()    << RESET << endl;
-	cout << left << setw(25) << "Toc do ra don:"     << B_YELLOW << getTocDoRaDon() << " don/giay" << RESET << endl;
-	cout << left << setw(25) << "Mana tieu thu/don:" << B_BLUE   << manaTieuThu             << RESET << endl;
+	cout << left << setw(22)<< "Player dang su dung " << B_WHITE << BOLD << "Phep Thuat " <<BLUE<< getTenVuKhi() << RESET << endl;
+	cout << left << setw(22) << "Loai phep:"         << mau << BOLD << loaiPhep            << RESET << endl;
+	cout << left << setw(22) << "Sat thuong co ban:" << B_RED    << getSatThuongCoBan()    << RESET << endl;
+	cout << left << setw(22) << "Toc do ra don:"     << B_YELLOW << getTocDoRaDon() << " don/giay" << RESET << endl;
+	cout << left << setw(22) << "Mana tieu thu/don:" << B_BLUE   << manaTieuThu             << RESET << endl;
 	
 	// Mo ta hieu ung
 	if (loaiPhep == "Hoa")
