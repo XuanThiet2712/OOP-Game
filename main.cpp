@@ -615,9 +615,6 @@ int main() {
 			int damage = player[player.getViTriDangDung()]->SatThuong(t);
 			cout << "\n" << B_RED << BOLD << "Sat thuong gay len " << nr.getName() << ": " << RESET << damage  <<endl;
 			int x = player.HoiMana(t);
-			if (x > 0) {
-				cout << "	>> Da phuc hoi them " << x << " Mana\n";
-			}
 			if (damage > 0) {
 				cout << endl;
 				nr.BiTanCong(damage);
