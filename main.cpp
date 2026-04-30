@@ -517,7 +517,7 @@ int PhepThuat::SatThuong(int t) {
 	
 	cout << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
 	cout << left << setw(28) << "	Tong so don da ra:"  << n << " don" << endl;
-	cout << left << setw(28) << "	Mana tieu thu:"      << B_BLUE << (manaTruoc + min(hoiMana1s * t, manaMax - manaTruoc)) - nguoiDungPhep->getMana() << " mana" << RESET << endl;
+	cout << left << setw(28) << "	Mana tieu thu:" << B_BLUE << n * manaTieuThu << " mana" << RESET << endl;
 	
 	if (loaiPhep == "Loi") {
 		int soCrit = n / 6;
@@ -632,7 +632,9 @@ int main() {
 		}
 		else if (lua == 2) {
 			clearScreen();
-			cout << YELLOW << BOLD << "============= DOI VU KHI =============" << RESET << "\n";
+			cout << RED << BOLD << "PLAYER" << RESET << "\n";
+			cout << player;
+			cout << YELLOW << BOLD << "================== DOI VU KHI ==============" << RESET << "\n";
 			player.trangBiHienTai();
 			cout << "Lua chon (1-3): ";
 			int chon; cin >> chon;
@@ -644,6 +646,8 @@ int main() {
 		}
 		else if (lua == 3) {
 			clearScreen();
+			cout << RED << BOLD << "PLAYER" << RESET << "\n";
+			cout << player;
 			cout << CYAN << BOLD << "===== CHE TAO VU KHI =====" << RESET << "\n";
 			cout << YELLOW << "  1. Sung"		<< RESET << "\n";
 			cout << B_CYAN << "  2. Kiem"		<< RESET << "\n";
