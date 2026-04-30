@@ -477,6 +477,7 @@ int PhepThuat::SatThuong(int t) {
 		// NẾU CHƯA ĐỦ MANA CHỜ
 		// =========================
 		if (manaHT < manaTieuThu) {
+			bonusPhong = 0.0f; // reset combo
 			time += dt;
 			continue;
 		}
