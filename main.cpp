@@ -479,8 +479,7 @@ int PhepThuat::SatThuong(int t) {
 		
 		// Cap nhat mana
 		int manaTimu = n * manaTieuThu;
-		int manaHoi  = min(hoiMana1s * t, manaMax - manaHT);
-		nguoiDungPhep->setMana(manaHT + manaHoi - manaTimu);
+		nguoiDungPhep->setMana(manaHT - manaTimu);
 		
 	} else { // Phong - 2 giai doan
 		
@@ -508,7 +507,7 @@ int PhepThuat::SatThuong(int t) {
 		
 		// Cap nhat mana sau 2 giai doan
 		int manaConSauG1 = manaHT - n1 * manaTieuThu;
-		int manaConSauG2 = min(manaConSauG1 + (int)(hoiMana1s * tCon), manaMax) - n2 * manaTieuThu;
+		int manaConSauG2 = manaConSauG1 - n2 * manaTieuThu;
 		nguoiDungPhep->setMana(max(0, manaConSauG2));
 	}
 	
@@ -615,9 +614,9 @@ int main() {
 			int t; cin >> t;
 			int damage = player[player.getViTriDangDung()]->SatThuong(t);
 			cout << "\n" << B_RED << BOLD << "Sat thuong gay len " << nr.getName() << ": " << RESET << damage  <<endl;
-			if (player.getViTriDangDung() != 2 ) {
-				int x = player.HoiMana(t);
-				if (x > 0) cout <<"	>>Da phuc hoi them "<<x<<" Mana\n";
+			int x = player.HoiMana(t);
+			if (x > 0) {
+				cout << "	>> Da phuc hoi them " << x << " Mana\n";
 			}
 			if (damage > 0) {
 				cout << endl;
