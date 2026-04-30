@@ -1,8 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
-#include <cstdlib>
-#include <ctime>
+
 using namespace std;
 // Reset lại màu về mặc định
 #define RESET	"\033[0m"
@@ -114,7 +113,7 @@ public:
 		int tongDamage = tongDan * getSatThuongCoBan();
 		
 		soLuongDan = dungLuongBang - danDu;
-		
+		cout << endl << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
 		cout << left << setw(28) << "	Tong so lan thay bang:"<< n << endl;
 		cout << left << setw(28) << "	Dan con lai:" 			<< soLuongDan << " vien" << endl;
 		
@@ -199,13 +198,13 @@ public:
 		int n   = min((int)(getTocDoRaDon() * t) , doBen); // tong don 
 		
 		cout << endl << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
-		cout << ">> Tan cong trong " << t << " giay (" << n << " don)\n";
+		cout <<left<<setw(28)<< "	>> Tan cong trong " << t << " giay (" << n << " don)\n";
 		
 		int tongDamage = getSatThuongCoBan()/(float)(2*doBen) * n * (2*doBen - n + 1 ) ; // tinh dame ; 
 		
-		cout << ">> Tong sat thuong: " << B_RED	<< tongDamage << RESET << endl;
+		cout <<left<<setw(28)<< "	>> Tong sat thuong: " << B_RED	<< tongDamage << RESET << endl;
 		doBen -= n ; 
-		cout << ">> Do ben con lai:  ";
+		cout <<left<<setw(28)<< "	>> Do ben con lai:  ";
 		if (doBen <= 0) 	cout << RED    << doBen << "/" << doBenMax << " [GAY!]"	<< RESET;
 		else if (doBen/doBenMax < 0.3f  )cout << YELLOW << doBen << "/" << doBenMax << " [THAP!]"<< RESET;
 		else				cout << GREEN  << doBen << "/" << doBenMax 				<< RESET;
@@ -226,7 +225,7 @@ public:
 		cout << left << setw(22) << "Player dang su dung "<< CYAN<<"Kiem " << getTenVuKhi()<< RESET << endl;
 		cout << left << setw(22) << "Sat thuong/don:"	<< B_RED	<< getSatThuongCoBan()			<< RESET << endl;
 		cout << left << setw(22) << "Toc do:"			<< B_YELLOW << getTocDoRaDon() << " don/s"	<< RESET << endl;
-		cout << left << setw(22) << "Do ben:";
+		cout << left << setw(22) << "Do ben:" 			<< B_YELLOW << doBen << RESET << endl;
 		cout << endl;
 	}
 	
@@ -324,7 +323,7 @@ private:
 	int    viTriDangDung;   // vi tri dung vu khi 
 	
 public:
-	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000,int _manaMax = 1000 , int hm = 5 ,  VuKhi* _vk[] = nullptr, int vt = 0)
+	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000,int _manaMax = 1000 , int hm = 5 , VuKhi** _vk = nullptr, int vt = 0)
 	: nameNV(_name), hp(_hp), mana(_mana), manaMax(_manaMax),hoiMana(hm), viTriDangDung(vt)
 	{
 		for (int i = 0; i < 3; i++)
@@ -335,12 +334,13 @@ public:
 		hp = x.hp ; 
 		mana = x.mana ; 
 		manaMax = x.manaMax ; 
+		hoiMana = x.hoiMana ; 
 		for (int i = 0; i < 3; i++){
 			vk[i] = x.vk[i];
 		}
 
 		viTriDangDung = x.viTriDangDung ; 
-		hoiMana = x.hoiMana ; 
+	
 	}
 	~NhanVat() {}
 	
@@ -401,6 +401,7 @@ public:
 		cout << "Nhap HP: ";   in >> nv.hp;
 		cout << "Nhap Mana: "; in >> nv.mana;
 		nv.manaMax = nv.mana;
+		cout << "Nhap hoi mana / s :" ; in >> nv.hoiMana ; 
 		return in;
 	}
 	friend ostream& operator<<(ostream& out, NhanVat nv) {
@@ -612,9 +613,7 @@ void hienThiGiaoDien(NhanVat& nr, NhanVat& p) {
 
 // MAIN
 
-int main() {
-	srand((unsigned)time(0));
-	
+int main() {	
 	Sung 		sung("AK47",      35, 10.0f, 30, 2.0f);
 	Kiem		kiem("Muramasa",  50,  2.0f, 100);
 	PhepThuat	phep("Amaterasu", 60,  1.0f, "Hoa", 15);
@@ -633,7 +632,7 @@ int main() {
 		
 		if (lua == 1) {
 			clearScreen();
-			cout << RED << BOLD << "========== MUC TIEU: " << nr.getName() << " ==========" << RESET << "\n";
+			cout << RED << BOLD << "============= MUC TIEU ==============" << RESET << "\n";
 			cout << nr;
 			cout << RED<< "PLAYER: " <<B_WHITE<< player.getName() << RESET
 			<< " | HP: " << B_RED << player.getHp() << RESET
@@ -645,7 +644,7 @@ int main() {
 			cout << "\nNhap thoi gian tan cong (giay): ";
 			int t; cin >> t;
 			int damage = player[player.getViTriDangDung()]->SatThuong(t);
-			cout << "\n" << B_RED << BOLD << "Sat thuong gay len " << nr.getName() << ": " << damage << RESET <<endl;
+			cout << "\n" << B_RED << BOLD << "Sat thuong gay len " << nr.getName() << ": " << RESET << damage  <<endl;
 			if (player.getViTriDangDung() != 2 ) {
 				int x = player.HoiMana(t);
 				if (x > 0) cout <<"	>>Da phuc hoi them "<<x<<" Mana\n";
@@ -712,9 +711,9 @@ int main() {
 	if (!nr.ConSong()) {
 		clearScreen();
 		cout << "\n" << RED << BOLD;
-		cout << "=============================\n";
+		cout << "=======================================\n";
 		cout << "  " << nr.getName() << " DA BI TIEU DIET!\n";
-		cout << "=============================" << RESET << "\n";
+		cout << "=======================================" << RESET ; 
 	}
 	return 0;
 }
