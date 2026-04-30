@@ -95,10 +95,7 @@ public:
 		bool hetDanKoThay = false;   // hết đạn, không đủ TG thay
 		bool vuaHetBang   = false;   // vừa đúng hết băng
 		
-		if (tDu >= thoiGianBanHetDan + tocDoThayBang) {
-			danDu = dungLuongBang;
-		} 
-		else if (tDu >= thoiGianBanHetDan) {
+		if (tDu >= thoiGianBanHetDan) {
 			danDu = dungLuongBang;
 			if (tDu == thoiGianBanHetDan)
 				vuaHetBang   = true;   // vừa đúng hết băng, không còn TG
@@ -110,8 +107,8 @@ public:
 		}
 		
 		int tongDan    = n * dungLuongBang + danDu;
-		int tongDamage = tongDan * getSatThuongCoBan();
-		
+		int tongDamage = tongDan * getSatThuongCoBan(); 	// tinh toan sat thuong
+	
 		soLuongDan = dungLuongBang - danDu;
 		cout << endl << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
 		cout << left << setw(28) << "	Tong so lan thay bang:"<< n << endl;
@@ -444,127 +441,149 @@ void PhepThuat::TanCong() {
 }
 
 int PhepThuat::SatThuong(int t) {
+	
+	// ── [0] Kiểm tra người dùng phép đã được gán chưa ─────────────────────
 	if (!nguoiDungPhep) {
-		cout << RED << ">> [" << getTenVuKhi() << "] Chua biet nguoi dung phep!" << RESET << endl;
+		cout << RED << ">> [" << getTenVuKhi() << "] Chua gan nguoi dung phep!\n" << RESET;
 		return 0;
 	}
 	
-	const char* mau         = mauPhep(loaiPhep);
-	const int   base        = getSatThuongCoBan();
-	const int   hoiMana1s   = nguoiDungPhep->getHoiMana();
-	const int   manaMax     = nguoiDungPhep->getManaMax();
-	const float thoiGian1Don = 1.0f / getTocDoRaDon(); // giay / 1 don
+	// ── [1] Lấy các thông số cần thiết ────────────────────────────────────
+	const int   base         = getSatThuongCoBan();
+	const float thoiGian1Don = 1.0f / getTocDoRaDon(); // giây để ra 1 đòn
+	const int   hoiMana1s    = nguoiDungPhep->getHoiMana();
+	const int   manaMax      = nguoiDungPhep->getManaMax();
+	int         manaHT       = nguoiDungPhep->getMana();   // mana hiện tại (biến cục bộ)
 	
-	// ── Kiem tra ban dau 
-	int manaHienTai = nguoiDungPhep->getMana();
-	if (manaHienTai < manaTieuThu) {
-		// Tinh thoi gian hoi du mana cho don dau
+	// ── [2] Kiểm tra ban đầu: có đủ mana (hoặc kịp hồi) để ra đòn đầu không ──
+	if (manaHT < manaTieuThu) {
 		if (hoiMana1s <= 0) {
-			cout << RED << BOLD << "!! Khong du mana va khong the hoi!" << RESET << endl;
+			cout << RED << BOLD << "!! Khong du mana va khong the hoi!\n" << RESET;
 			return 0;
 		}
-		float tHoi = (float)(manaTieuThu - manaHienTai) / hoiMana1s;
-		if (tHoi > t) {
-			cout << RED << BOLD << "!! Khong the hoi du mana trong " << t << " giay!" << RESET << endl;
+		float tHoi = (float)(manaTieuThu - manaHT) / hoiMana1s;
+		if (tHoi >= (float)t) {
+			cout << RED << BOLD << "!! Khong the hoi du mana trong " << t << " giay!\n" << RESET;
 			return 0;
 		}
 	}
 	
-	// ── Mo phong theo chu ky: danh het mana -> hoi -> danh tiep ────────
-	// Trong luc danh: KHONG hoi mana
-	// Het mana: dung lai, hoi mana (tính thoi gian cho), roi danh tiep
-	int   tongDamage  = 0;
-	int   soDon       = 0;
-	int   soCrit      = 0;   // Loi: dem so lan crit
-	int   donPhong    = 0;   // Phong: vi tri don trong chuoi (reset khi het mana)
-	float tHienTai    = 0.0f;
-	int   manaHT      = manaHienTai;
+	// ── [3] Vòng lặp mô phỏng từng đòn theo thời gian thực ───────────────
+	//
+	//   Quy tắc:
+	//   - Đang đánh → KHÔNG hồi mana
+	//   - Hết mana  → dừng, hồi mana (tính thời gian chờ), đánh tiếp
+	//   - Hết giờ   → thoát
+	//
+	long long tongDamage = 0;   // dùng long long tránh tràn số
+	int       soDon      = 0;
+	int       soCrit     = 0;   // đếm số lần CRIT (chỉ dùng cho Lôi)
+	int       donPhong   = 0;   // vị trí trong chuỗi liên tiếp (chỉ dùng cho Phong)
+	float     nhanPhong  = 1.0f;// nhân số thực tế của đòn VỪA đánh (fix bug donPhong-1)
+	float     tHienTai   = 0.0f;
 	
 	while (tHienTai < (float)t) {
-		// Neu khong du mana: hoi mana, tinh thoi gian cho
+		
+		// [3a] Thiếu mana → tính thời gian hồi rồi tiếp tục
 		if (manaHT < manaTieuThu) {
-			if (hoiMana1s <= 0) break; // khong the hoi, dung
-			int canHoi      = manaTieuThu - manaHT;
-			float tChoHoi   = (float)canHoi / hoiMana1s;
-			tHienTai       += tChoHoi;
-			if (tHienTai >= (float)t) break; // het gio trong luc hoi
-			manaHT         += canHoi; // du mana cho 1 don
-			donPhong        = 0;      // Phong: het mana -> reset chuoi ve x1
+			if (hoiMana1s <= 0) break; // không thể hồi → kết thúc
+			
+			int   canHoi  = manaTieuThu - manaHT;
+			float tChoHoi = (float)canHoi / hoiMana1s;
+			
+			tHienTai += tChoHoi;
+			if (tHienTai >= (float)t) break; // hết giờ trong lúc hồi
+			
+			manaHT  += canHoi; // đủ mana cho 1 đòn
+			donPhong = 0;      // [Phong] hết mana → reset chuỗi về x1.00
 		}
 		
-		// Kiem tra con du gio danh 1 don khong
+		// [3b] Kiểm tra còn đủ thời gian ra 1 đòn không
 		if (tHienTai + thoiGian1Don > (float)t) break;
 		
-		// Danh don (khong hoi mana trong luc danh)
-		manaHT     -= manaTieuThu;
-		tHienTai   += thoiGian1Don;
+		// [3c] Ra đòn: trừ mana, tăng thời gian, đếm số đòn
+		manaHT   -= manaTieuThu;
+		tHienTai += thoiGian1Don;
 		soDon++;
 		
+		// [3d] Tính damage theo từng loại phép ─────────────────────────────
+		
 		if (loaiPhep == "Hoa") {
-			tongDamage += (int)(base * 1.1f);
+			// Mỗi đòn = base + 10% base (thêm hiệu ứng thiêu đốt)
+			tongDamage += (long long)(base * 1.1f);
 			
 		} else if (loaiPhep == "Loi") {
+			// Đòn thứ 6 trong mỗi chu kỳ 6 đòn → CRIT x2
+			// soDon đếm toàn cục → chu kỳ không bị gián đoạn khi hết mana
 			if (soDon % 6 == 0) {
-				tongDamage += base * 2;
+				tongDamage += (long long)base * 2;
 				soCrit++;
 			} else {
 				tongDamage += base;
 			}
 			
 		} else if (loaiPhep == "Phong") {
-			float nhan = min(1.0f + donPhong * 0.01f, 3.0f);
-			tongDamage += (int)(base * nhan);
-			donPhong++;
+			// Mỗi đòn liên tiếp tăng thêm 1% (tối đa x3.00)
+			// donPhong = số đòn đã đánh trong chuỗi hiện tại (chưa tính đòn này)
+			// → nhân số đòn này = 1.00 + donPhong * 1%
+			nhanPhong  = min(1.0f + donPhong * 0.01f, 3.0f); // lưu lại để in sau
+			tongDamage += (long long)(base * nhanPhong);
+			donPhong++;  // tăng SAU khi đã lưu nhân số → tránh bug donPhong-1 âm
 		}
 	}
 	
-	nguoiDungPhep->setMana(manaHT > manaMax ? manaMax : (manaHT < 0 ? 0 : manaHT));
+	// ── [4] Cập nhật mana thực cho nhân vật ──────────────────────────────
+	nguoiDungPhep->setMana(manaHT);
 	
-	if (soDon <= 0) {
-		cout << RED << ">> Khong du mana va thoi gian de ra bat ky don nao!" << RESET << endl;
+	// ── [5] Không ra được đòn nào ─────────────────────────────────────────
+	if (soDon == 0) {
+		cout << RED << ">> Khong du mana va thoi gian de ra bat ky don nao!\n" << RESET;
 		return 0;
 	}
 	
-	// ── In ket qua ───────────────────────────────────────────────────────
-	cout << endl;
+	// ── [6] In kết quả ───────────────────────────────────────────────────
+	const char* mau = mauPhep(loaiPhep);
+	
+	cout << "\n";
 	cout << mau << BOLD
-	<< "[=== KET QUA: " << getTenVuKhi() << " | " << loaiPhep << " | " << t << " giay ===]"
-	<< RESET << endl;
-	cout << WHITE << string(50, '-') << RESET << endl;
+	<< "" << getTenVuKhi() << "  |  " << loaiPhep << "  |  " << t << ""
+	<< RESET << "\n";
 	
-	cout << left << setw(30) << "  Tong don da danh:"
-	<< B_WHITE << soDon << " don" << RESET << endl;
+	// --- Thông tin chung ---
+	cout << mau << "  Tong don     : " << RESET << B_WHITE << soDon << " don\n" << RESET;
 	
+	// --- Chi tiết theo loại phép ---
 	if (loaiPhep == "Hoa") {
-		cout << left << setw(30) << "  Cong thuc:"
-		<< RED << soDon << " don x " << base << " x 1.1 (thieu dot +10%/don)" << RESET << endl;
+		cout << mau << "  Cong thuc    : " << RESET
+		<< soDon << " don x " << base << " x 1.1 (thieu dot +10%/don)\n";
 		
 	} else if (loaiPhep == "Loi") {
 		int donThuong = soDon - soCrit;
-		cout << left << setw(30) << "  So lan CRIT (don thu 6):"
-		<< YELLOW << BOLD << soCrit << " lan crit!" << RESET << endl;
-		cout << left << setw(30) << "  Cong thuc:"
-		<< YELLOW << donThuong << " don x " << base
-		<< " + " << soCrit << " crit x " << base*2 << " (x2)" << RESET << endl;
+		cout << mau << "  CRIT (don 6) : " << RESET << YELLOW << BOLD << soCrit << " lan\n" << RESET;
+		cout << mau << "  Cong thuc    : " << RESET
+		<< donThuong << " don x " << base
+		<< " + " << soCrit << " crit x " << base * 2 << "\n";
 		
 	} else if (loaiPhep == "Phong") {
-		float nhanCuoi = min(1.0f + (donPhong - 1) * 0.01f, 3.0f);
-		cout << left << setw(30) << "  Nhan cuoi cung dat duoc:"
-		<< B_CYAN << "x" << fixed << setprecision(2) << nhanCuoi
-		<< " (+" << (donPhong-1) << "% sau " << donPhong << " don)" << RESET << endl;
-		cout << left << setw(30) << "  Cong thuc:"
-		<< B_CYAN << "sum(base * (1 + i*1%)), i=0.." << (soDon-1)
-		<< " | reset khi can hoi mana" << RESET << endl;
+		// nhanPhong giờ là nhân số của đòn CUỐI CÙNG thực sự ra
+		cout << mau << "  Nhan cuoi    : " << RESET
+		<< B_CYAN << "x" << fixed << setprecision(2) << nhanPhong << RESET
+		<< " (sau " << soDon << " don lien tuc)\n";
+		cout << mau << "  Cong thuc    : " << RESET
+		<< "sum(base x (1 + i x 1%)),  i = 0 .. " << (soDon - 1)
+		<< "\n";
 	}
 	
-	cout << WHITE << string(50, '-') << RESET << endl;
-	cout << BOLD << B_RED << left << setw(30) << "  TONG DAMAGE:"
-	<< tongDamage << RESET << endl;
-	cout << left << setw(30) << "  Mana con lai:"
-	<< B_BLUE << nguoiDungPhep->getMana() << "/" << manaMax << RESET << endl;
-	cout << WHITE << string(50, '=') << RESET << endl;
+	// --- Tổng kết ---
+	cout << WHITE << "  " << string(36, '-') << "\n" << RESET;
+	cout << BOLD << B_RED
+	<< "  TONG DAMAGE  : " << (int)tongDamage << "\n" << RESET;
+	cout << mau
+	<< "  Mana con lai : " << RESET
+	<< B_BLUE << nguoiDungPhep->getMana() << "/" << manaMax << "\n" << RESET;
+	cout << mau << BOLD << "" << string(38, '=') << "\n" << RESET;
 	
-	return tongDamage;
+	return (int)tongDamage;
 }
 
 void PhepThuat::inThongTin() {
