@@ -444,7 +444,7 @@ void PhepThuat::TanCong() {
 int PhepThuat::SatThuong(int t) {
 	if (!nguoiDungPhep) return 0;
 	
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	int base = getSatThuongCoBan();
 	float speed = getTocDoRaDon();
 	
@@ -527,7 +527,7 @@ int PhepThuat::SatThuong(int t) {
 	<< "\tTong damage:" << tongDamage 
 	<< RESET << endl;
 	
-=======
+//=======
 	const int   base      = getSatThuongCoBan();
 	const float tocDo     = getTocDoRaDon();
 	const int   hoiMana1s = nguoiDungPhep->getHoiMana();
@@ -616,7 +616,7 @@ int PhepThuat::SatThuong(int t) {
 	}
 	
 	cout << BOLD << B_RED << left << setw(28) << "	Tong damage:" << tongDamage                    << RESET << endl;
->>>>>>> 0ed4094da7e99e8b02294a6b757db6c27114b8db
+//>>>>>>> 0ed4094da7e99e8b02294a6b757db6c27114b8db
 	cout << string(70, '=') << endl;
 	cout << ">> Tran chien ket thuc, Mana con lai: " << B_BLUE << nguoiDungPhep->getMana() << "/" << manaMax << RESET << endl;
 	
