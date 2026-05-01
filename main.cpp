@@ -479,9 +479,7 @@ int PhepThuat::SatThuong(int t) {
 	else if (loaiPhep == "Phong") {
 		// cấp số cộng
 		tongDamage = (int)(
-						   n * base +
-						   base * 0.01f * (n * (n - 1) / 2.0f)
-						   );
+		  n * base + base * 0.01f * (n * (n - 1) / 2.0f));
 	}
 	//  CẬP NHẬT MANA
 	int manaUsed = n * manaTieuThu;
