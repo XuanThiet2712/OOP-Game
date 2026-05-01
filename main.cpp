@@ -421,7 +421,8 @@ static const char* mauPhep(const string& lp) {
 
 void PhepThuat::TanCong() {
 	const char* mau = mauPhep(loaiPhep);
-	cout << mau << YELLOW << BOLD << "[ PHEP THUAT ]" << RESET
+	cout << YELLOW << BOLD << "[ PHEP THUAT ]" << RESET
+	<< mau << "[ " << getTenVuKhi() << " ] " << RESET
 	<<CYAN<< "[ "  << getTenVuKhi()  << " ] " << RESET
 	<< " Su dung 1 nang luc tam linh ky la tan cong vao ke dich " <<endl ; 
 	
@@ -441,100 +442,92 @@ void PhepThuat::TanCong() {
 }
 
 int PhepThuat::SatThuong(int t) {
-	if (!nguoiDungPhep) {
-		cout << RED << ">> [" << getTenVuKhi() << "] Chua gan nguoi dung phep!\n" << RESET;
-		return 0;
-	}
+	if (!nguoiDungPhep) return 0;
 	
-	const int   base  = getSatThuongCoBan();
-	const float tocDo = getTocDoRaDon();
-	const float dt    = 1.0f / tocDo;   // thời gian giữa 2 lần check
+	int base = getSatThuongCoBan();
+	float speed = getTocDoRaDon();
 	
-	int tongDamage = 0;
-	int n = 0;
-	
-	float time = 0.0f;
-	
+	int mana = nguoiDungPhep->getMana();
 	int manaMax = nguoiDungPhep->getManaMax();
+	int regen = nguoiDungPhep->getHoiMana();
 	
-	// cho Loi
-	int comboLoi = 0;
+	// TÍNH SỐ HIT
+	int maxHitByTime = (int)(speed * t);
 	
-	// cho Phong
-	float bonusPhong = 0.0f;
+	// Mana tổng
+	int totalMana = mana + regen * t;
 	
-	while (time < t) {
-		// =========================
-		// HỒI MANA TRƯỚC
-		// =========================
-		int manaHT = nguoiDungPhep->getMana();
-		int manaHoi = (int)(nguoiDungPhep->getHoiMana() * dt);
-		nguoiDungPhep->setMana(manaHT + manaHoi);
-		
-		manaHT = nguoiDungPhep->getMana();
-		
-		// =========================
-		// NẾU CHƯA ĐỦ MANA CHỜ
-		// =========================
-		if (manaHT < manaTieuThu) {
-			bonusPhong = 0.0f; // reset combo
-			time += dt;
-			continue;
-		}
-		
-		// =========================
-		// TRỪ MANA & CAST
-		// =========================
-		nguoiDungPhep->setMana(manaHT - manaTieuThu);
-		
-		int damage = 0;
-		
-		if (loaiPhep == "Hoa") {
-			damage = (int)(base * 1.1f);
-		}
-		else if (loaiPhep == "Loi") {
-			comboLoi++;
-			
-			if (comboLoi == 6) {
-				damage = base * 2;
-				comboLoi = 0;
-			} else {
-				damage = base;
-			}
-		}
-		else if (loaiPhep == "Phong") {
-			damage = (int)(base * (1.0f + bonusPhong));
-			bonusPhong += 0.01f;
-			
-			if (bonusPhong > 2.0f) bonusPhong = 2.0f;
-		}
-		
-		tongDamage += damage;
-		n++;
-		
-		time += dt;
+	int maxHitByMana = totalMana / manaTieuThu;
+	
+	int n = min(maxHitByTime, maxHitByMana);
+	
+	// TÍNH DAMAGE
+	int tongDamage = 0;
+	
+	if (loaiPhep == "Hoa") {
+		tongDamage = (int)(n * base * 1.1f);
 	}
 	
-	// =========================
-	//  IN KẾT QUẢ
-	// =========================
-	cout << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
-	cout << left << setw(28) << "	Tong so don da ra:" << n << " don" << endl;
-	cout << left << setw(28) << "	Mana con lai:" 
-	<< B_BLUE << nguoiDungPhep->getMana() << "/" << manaMax << RESET << endl;
+	else if (loaiPhep == "Loi") {
+		int cycle = n / 6;
+		int du = n % 6;
+		
+		tongDamage = cycle * (5 * base + 2 * base) + du * base;
+	}
+	
+	else if (loaiPhep == "Phong") {
+		// cấp số cộng
+		tongDamage = (int)(
+						   n * base +
+						   base * 0.01f * (n * (n - 1) / 2.0f)
+						   );
+	}
+	//  CẬP NHẬT MANA
+	int manaUsed = n * manaTieuThu;
+	int manaFinal = totalMana - manaUsed;
+	
+	if (manaFinal > manaMax) manaFinal = manaMax;
+	if (manaFinal < 0) manaFinal = 0;
+	
+	nguoiDungPhep->setMana(manaFinal);
+	
+	// OUTPUT
+	cout << endl 
+	<< CYAN << BOLD 
+	<< "[Dien bien chien dau - " << t << " giay]" 
+	<< RESET << endl;
+	
+	cout << left << setw(28) 
+	<< "\tTong so don da ra:" << n << " don";
+	cout << endl;
+	
+	cout << left << setw(28) 
+	<< "\tMana con lai:" 
+	<< B_BLUE << manaFinal << "/" << manaMax << RESET << endl;
 	
 	if (loaiPhep == "Loi") {
-		cout << left << setw(28) << "	Chu ky Loi:" << "5 thuong + 1 crit x2" << endl;
+		cout << left << setw(28) 
+		<< "\tChu ky Loi:" 
+		<< "5 thuong + 1 crit x2" << endl;
 	}
 	else if (loaiPhep == "Phong") {
-		cout << left << setw(28) << "	Bonus cuoi:" 
-		<< B_CYAN << "x" << fixed << setprecision(2) << (1.0f + bonusPhong) << RESET << endl;
+		cout << left << setw(28) 
+		<< "\tBonus cuoi:" 
+		<< B_CYAN << "x" << fixed << setprecision(2) 
+		<< (1.0f + (n - 1) * 0.01f) 
+		<< RESET << endl;
 	}
 	else if (loaiPhep == "Hoa") {
-		cout << left << setw(28) << "	Hieu ung:" << RED << "+10% moi don" << RESET << endl;
+		cout << left << setw(28) 
+		<< "\tHieu ung:" 
+		<< RED << "+10% moi don" << RESET << endl;
 	}
 	
-	cout << BOLD << B_RED << left << setw(28) << "	Tong damage:" << tongDamage << RESET << endl;
+	cout << BOLD << B_RED 
+	<< left << setw(28) 
+	<< "\tTong damage:" << tongDamage 
+	<< RESET << endl;
+	
 	cout << string(70, '=') << endl;
 	
 	return tongDamage;
