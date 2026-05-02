@@ -494,14 +494,14 @@ int PhepThuat::SatThuong(int t) {
 		float D1 = (float)base * (n1 + 0.01f * n1 * (n1 - 1) / 2.0f);
 		
 		// --- Giai doan 2: het mana, hoi lai roi danh x1.00 (reset chuoi) ---
-		float tCon    = t - (float)n1 / tocDo;
+		float tCon      = t - (float)n1 / tocDo;
 		int   manaHoiG2 = (tCon > 0) ? (int)(hoiMana1s * tCon) : 0;
 		int   n2_mana   = (tCon > 0) ? manaHoiG2 / manaTieuThu : 0;
 		int   n2_time   = (tCon > 0) ? (int)(tocDo * tCon)      : 0;
-		int   n2        = min(n2_mana, n2_time);
-		int   D2        = base * n2;
+		int   n2		= min(n2_mana, n2_time);
+		int   D2		= base * n2;
 		
-		n          = n1 + n2;
+		n 		   = n1 + n2;
 		tongDamage = (int)(D1 + D2);
 		
 		if (n == 0) {
@@ -584,7 +584,7 @@ void hienThiGiaoDien(NhanVat& nr, NhanVat& p) {
 	cout << "Lua chon: ";
 }
 
-// MAIN
+// MAIN CHISNH
 
 int main() {	
 	Sung 		sung("AK47",      35, 10.0f, 30, 2.0f);
