@@ -320,10 +320,6 @@ public:
 	int  SatThuong(int t) override;
 	void InThongTin()     override;
 	
-	friend ostream& operator<<(ostream& out, PhepThuat p) {
-		p.InThongTin();
-		return out;
-	}
 	friend istream& operator>>(istream& is,  PhepThuat& p) {
 		string ten, lp;
 		int st, mtb;
@@ -365,6 +361,11 @@ public:
 		p.loaiPhep    = lp;
 		p.manaTieuThu = mtb;
 		return is;
+	}
+	
+	friend ostream& operator<<(ostream& out, PhepThuat p) {
+		p.InThongTin();
+		return out;
 	}
 };
 
