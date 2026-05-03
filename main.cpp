@@ -562,7 +562,8 @@ int PhepThuat::SatThuong(int t) {
 		
 		if (loaiPhep == "Hoa") {
 			tongDamage = (int)(base * 1.1f * n);
-		} else { // Loi
+		} 
+		else { // Loi
 			int nChuKy = n / 6;
 			int nDu    = n % 6;
 			tongDamage = nChuKy * 7 * base + nDu * base;
@@ -572,35 +573,25 @@ int PhepThuat::SatThuong(int t) {
 		int manaConLai = manaHT + hoiMana1s * t - n * manaTieuThu;
 		nguoiDungPhep->setMana(min(max(0, manaConLai), manaMax));
 		
-	} else { // Phong - 2 giai doan
+	} 
+	else { // Phong
+		int tongMana = manaHT + hoiMana1s * t;
+		int n_mana   = tongMana / manaTieuThu;
+		int n_time   = (int)(tocDo * t);
+		int n1       = min(n_mana, n_time);  // tong don
 		
-		// --- Giai doan 1: dung mana hien tai, dame cong don lien tuc ---
-		int n1_mana = manaHT / manaTieuThu;
-		int n1_time = (int)(tocDo * t);
-		int n1      = min(n1_mana, n1_time);
-		
-		// Tong dame G1: base * sum(1 + i*0.01) voi i = 0..n1-1
-		// = base * (n1 + 0.01 * n1*(n1-1)/2)
+		// dame tang dan: base * (n1 + 0.01 * n1*(n1-1)/2)
 		float D1 = (float)base * (n1 + 0.01f * n1 * (n1 - 1) / 2.0f);
 		
-		// --- Giai doan 2: het mana, hoi lai roi danh x1.00 (reset chuoi) ---
-		float tCon      = t - (float)n1 / tocDo;
-		int   manaHoiG2 = (tCon > 0) ? (int)(hoiMana1s * tCon) : 0;
-		int   n2_mana   = (tCon > 0) ? manaHoiG2 / manaTieuThu : 0;
-		int   n2_time   = (tCon > 0) ? (int)(tocDo * tCon)      : 0;
-		int   n2		= min(n2_mana, n2_time);
-		int   D2		= base * n2;
-		
-		n 		   = n1 + n2;
-		tongDamage = (int)(D1 + D2);
+		n          = n1;
+		tongDamage = (int)D1;
 		
 		if (n == 0) {
 			cout << RED << ">> Khong du mana va thoi gian de ra bat ky don nao!\n" << RESET;
 			return 0;
 		}
 		
-		// mana cuoi = mana sau G1 + mana hoi G2 - mana tieu thu G2
-		int manaConLai = (manaHT - n1 * manaTieuThu) + manaHoiG2 - n2 * manaTieuThu;
+		int manaConLai = manaHT + hoiMana1s * t - n * manaTieuThu;
 		nguoiDungPhep->setMana(min(max(0, manaConLai), manaMax));
 	}
 	
