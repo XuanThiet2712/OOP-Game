@@ -3,16 +3,16 @@
 #include <cmath>
 #include <string>
 using namespace std;
-// Reset lại màu về mặc định
-#define RESET	"\033[0m"
+//color
+#define RESET	"\033[0m"  // Reset lại màu về mặc định
 #define BOLD	"\033[1m"	// In chữ đậm (bold)
-#define RED		"\033[31m"   // Màu đỏ
-#define GREEN	"\033[32m"   // Màu xanh lá
-#define YELLOW	"\033[33m"   // Màu vàng
-#define BLUE	"\033[34m"   // Màu xanh dương
-#define MAGENTA	"\033[35m"   // Màu tím hồng
-#define CYAN	"\033[36m"   // Màu xanh cyan (xanh ngọc)
-#define WHITE	"\033[37m"   // Màu trắng
+#define RED		"\033[31m"   
+#define GREEN	"\033[32m"   
+#define YELLOW	"\033[33m"  
+#define BLUE	"\033[34m"   
+#define MAGENTA	"\033[35m"   //  tím hồng
+#define CYAN	"\033[36m"   //  xanh cyan (xanh ngọc)
+#define WHITE	"\033[37m"   // trắng
 
 // mau sang
 #define B_RED		"\033[91m" // Đỏ sáng
@@ -22,7 +22,7 @@ using namespace std;
 #define B_MAGENTA	"\033[95m" // Tím sáng
 #define B_CYAN		"\033[96m" // Cyan sáng
 #define B_WHITE		"\033[97m" // Trắng sáng
-
+// clear Screen
 void clearScreen() {
 #ifdef _WIN32
 	system("cls");
@@ -53,7 +53,7 @@ public:
 	void setTenVuKhi(string ten)	{ tenVuKhi			= ten;	}
 	void setSatThuongCoBan(int st)	{ satThuongCoBan	= st;	}
 	void setTocDoRaDon(float td)	{ tocDoRaDon		= td;	}
-	// 
+	// virtual method
 	virtual void TanCong()			= 0;
 	virtual int  SatThuong(int t)	= 0;
 	virtual void inThongTin()		= 0;
@@ -74,6 +74,8 @@ public:
 		tocDoThayBang = sg.tocDoThayBang ; 
 	}
 	~Sung(){}
+	
+	//METHOD
 	//Mo ta cach tan cong cua Sung
 	void TanCong() override {
 		cout << YELLOW << BOLD << "[ SUNG ]" << RESET
@@ -126,7 +128,8 @@ public:
 		
 		return tongDamage;
 	}
-	// In thong tin trang thai vu khi hien tai 
+	
+	// In thong tin - trang thai vu khi hien tai 
 	void inThongTin() override {
 		cout << left << setw(22)<< "Player dang su dung " << CYAN  << BOLD<< "SUNG " << getTenVuKhi() 	<< RESET << endl;
 		cout << left << setw(22) << "Sat thuong/vien:"	<< B_RED	<< getSatThuongCoBan()				<< RESET << endl;
@@ -135,6 +138,7 @@ public:
 		cout << left << setw(22) << "Toc do thay bang:"	<< tocDoThayBang << " giay" << endl;
 	}
 	
+	// cin - cout 
 	friend istream& operator>>(istream& is, Sung& sg);
 	friend ostream& operator<<(ostream& os, Sung sg) { 
 		sg.inThongTin(); 
@@ -177,6 +181,9 @@ public:
 	int  getDoBen()			{ return doBen;    }
 	void setDoBen(int db)	{ doBen		= (db < 0) ? 0 : db; }
 	
+	
+	//method
+	
 	void TanCong() override {
 		cout << YELLOW << BOLD << "[ KIEM ]" << RESET
 		<<  CYAN << " [ KIEM " << getTenVuKhi() << "] "  << RESET
@@ -188,7 +195,7 @@ public:
 		double doBenMax = doBen ; 
 		if (doBen <= 0) {
 			cout << RED 	<< ">> Kiem da gay! Khong the tan cong!"<< RESET << endl;
-			cout << GREEN 	<<">> Vui long che tao lai Kiem " 		<< RESET << endl ;
+			cout << GREEN 	<< ">> Vui long che tao lai Kiem " 		<< RESET << endl ;
 			return 0;
 		}
 		
@@ -219,14 +226,15 @@ public:
 	}
 	
 	void inThongTin() override {
-		cout << left << setw(22) << "Player dang su dung "<< CYAN<<"Kiem " << getTenVuKhi()<< RESET << endl;
-		cout << left << setw(22) << "Sat thuong/don:"	<< B_RED	<< getSatThuongCoBan()			<< RESET << endl;
-		cout << left << setw(22) << "Toc do:"			<< B_YELLOW << getTocDoRaDon() << " don/s"	<< RESET << endl;
-		cout << left << setw(22) << "Do ben:" 			<< B_YELLOW << doBen << RESET << endl;
+		cout << left << setw(22) << "Player dang su dung "	<< CYAN		<<"Kiem " << getTenVuKhi()<< RESET << endl;
+		cout << left << setw(22) << "Sat thuong/don:"		<< B_RED	<< getSatThuongCoBan()			<< RESET << endl;
+		cout << left << setw(22) << "Toc do:"				<< B_YELLOW << getTocDoRaDon() << " don/s"	<< RESET << endl;
+		cout << left << setw(22) << "Do ben:" 				<< B_YELLOW << doBen << RESET << endl;
 		cout << endl;
 	}
 	
-	friend ostream& operator<<(ostream& os, Kiem km) { km.inThongTin(); return os; }
+	//cin - cout
+	
 	friend istream& operator>>(istream& is, Kiem& km) {
 		string ten; int st; float td;
 		is.ignore();
@@ -245,8 +253,10 @@ public:
 		if (km.doBen < 0) km.doBen = 0;
 		return is;
 	}
+	friend ostream& operator<<(ostream& os, Kiem km)  { km.inThongTin(); return os; }
 };
 
+// PHEP THUAT
 
 class PhepThuat : public VuKhi {
 private:
