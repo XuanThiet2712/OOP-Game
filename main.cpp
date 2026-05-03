@@ -44,7 +44,7 @@ public:
 	: tenVuKhi(ten), satThuongCoBan(st), tocDoRaDon(td) {}
 	VuKhi(const VuKhi& vk)
 	: tenVuKhi(vk.tenVuKhi), satThuongCoBan(vk.satThuongCoBan), tocDoRaDon(vk.tocDoRaDon) {}
-	~VuKhi() {}
+	virtual ~VuKhi() {}
 	// get
 	string	getTenVuKhi()		{
 		return tenVuKhi;
