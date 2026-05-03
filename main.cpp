@@ -219,7 +219,7 @@ public:
 		
 		int n   = min((int)(getTocDoRaDon() * t), doBen);  // tong don
 		
-		cout << endl << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
+		cout << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
 		cout << left << setw(28) << "	>> Tan cong trong " << t << " giay (" << n << " don)\n";
 		
 		int tongDamage = getSatThuongCoBan() / (float)(2 * doBen) * n * (2 * doBen - n + 1 ) ; // tinh dame ;
