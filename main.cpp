@@ -376,7 +376,7 @@ public:
 //CLASS NHAN VAT
 class NhanVat {
 private:
-	string nameNV;
+	string name;
 	int    hp;
 	int    mana; // mana hien tai
 	int    manaMax;
@@ -386,12 +386,12 @@ private:
 
 public:
 	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000, int _manaMax = 1000, int hm = 5, VuKhi** _vk = nullptr, int vt = 0)
-		: nameNV(_name), hp(_hp), mana(_mana), manaMax(_manaMax), hoiMana(hm), viTriDangDung(vt) {
+		: name(_name), hp(_hp), mana(_mana), manaMax(_manaMax), hoiMana(hm), viTriDangDung(vt) {
 		for (int i = 0; i < 3; i++)
 			vk[i] = (_vk ? _vk[i] : nullptr);
 	}
 	NhanVat(const NhanVat& x) {
-		nameNV = x.nameNV ;
+		name = x.name ;
 		hp = x.hp ;
 		mana = x.mana ;
 		manaMax = x.manaMax ;
@@ -406,7 +406,7 @@ public:
 	~NhanVat() {}
 
 	string 	getName() 			{
-		return nameNV;
+		return name;
 	}
 	int		getHp()				{
 		return hp;
@@ -425,7 +425,7 @@ public:
 	}
 
 	void setName(string _name)		{
-		nameNV = _name;
+		name = _name;
 	}
 	void setHp(int _hp)				{
 		hp    = (_hp   < 0) ? 0 : _hp;
@@ -462,7 +462,7 @@ public:
 	int SatThuong(int t) {
 		VuKhi* v = vk[viTriDangDung];
 		if (!v) {
-			cout << RED << ">> [" << nameNV << "] Chua co vu khi!" << RESET << endl;
+			cout << RED << ">> [" << name << "] Chua co vu khi!" << RESET << endl;
 			return 0;
 		}
 		return v->SatThuong(t);
@@ -472,7 +472,7 @@ public:
 		int hpTruoc = hp;
 		hp -= st;
 		if (hp < 0) hp = 0;
-		cout << RED << ">> " << nameNV << " bi tan cong" << RESET << endl;
+		cout << RED << ">> " << name << " bi tan cong" << RESET << endl;
 		cout << "	HP: " << B_GREEN << hpTruoc << RESET << " -> " << B_RED << hp << RESET << endl;
 	}
 	// kiem tra trang thai con song hay da chet cua nhan vat
@@ -483,7 +483,7 @@ public:
 	friend istream& operator>>(istream& in, NhanVat& nv) {
 		cout << "Nhap ten nhan vat: ";
 		in.ignore();
-		getline(in, nv.nameNV);
+		getline(in, nv.name);
 		cout << "Nhap HP: ";
 		in >> nv.hp;
 		cout << "Nhap Mana: ";
@@ -494,7 +494,7 @@ public:
 		return in;
 	}
 	friend ostream& operator<<(ostream& out, NhanVat nv) {
-		out << left << setw(22) << "Ten:"  << B_WHITE  << nv.nameNV	<< RESET << endl;
+		out << left << setw(22) << "Ten:"  << B_WHITE  << nv.name	<< RESET << endl;
 		out << left << setw(22) << "HP:"   << B_RED  << nv.hp 		<< RESET << endl;
 		out << left << setw(22) << "Mana:" << BLUE   << nv.mana << B_BLUE << "/" << nv.manaMax << RESET << endl;
 		out << left << setw(22) << "Hoi mana/giay:" << B_BLUE << nv.hoiMana << RESET << endl;
