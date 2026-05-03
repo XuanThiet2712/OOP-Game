@@ -425,8 +425,8 @@ public:
 	void setHp(int _hp){
 		hp    = (_hp   < 0) ? 0 : _hp;
 	}
-	void setMana(int _mana)	{
-		mana = (_mana < 0) ? 0 : _mana ;
+	void setMana(int _mana) {
+		mana = (_mana < 0) ? 0 : (_mana > manaMax ? manaMax : _mana);
 	}
 	void setManaMax(int _manaMax){
 		manaMax = _manaMax ; 
