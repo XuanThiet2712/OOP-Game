@@ -40,7 +40,7 @@ private:
 	float	tocDoRaDon;
 public:
 	//constructor / destructor
-	VuKhi(string ten = "Chua co", int st = 0, float td = 0)
+	VuKhi(string ten = "", int st = 0, float td = 0)
 	: tenVuKhi(ten), satThuongCoBan(st), tocDoRaDon(td) {}
 	VuKhi(const VuKhi& vk)
 	: tenVuKhi(vk.tenVuKhi), satThuongCoBan(vk.satThuongCoBan), tocDoRaDon(vk.tocDoRaDon) {}
@@ -78,8 +78,7 @@ private:
 	float 	tocDoThayBang;
 public:
 	//constructor / destructor
-	Sung() : VuKhi(), soLuongDan(30), tocDoThayBang(2) {}
-	Sung(string ten, int st, float td, int sld, float tdb)
+	Sung(string ten = "", int st = 0 , float td = 0, int sld = 0, float tdb = 0)
 	: VuKhi(ten, st, td), soLuongDan(sld), tocDoThayBang(tdb) {}
 	Sung(const Sung& sg): VuKhi(sg) {
 		soLuongDan = sg.soLuongDan ;
@@ -185,10 +184,7 @@ private:
 	int doBen;
 public:
 	//constructor
-	Kiem() : VuKhi() {
-		doBen = 100 ;
-	}
-	Kiem(string ten, int st, float td, int db) : VuKhi(ten, st, td) {
+	Kiem(string ten = "", int st = 0, float td = 0, int db = 0) : VuKhi(ten, st, td) {
 		doBen = db ;
 	}
 	Kiem(const Kiem& other)
@@ -291,9 +287,8 @@ private:
 	NhanVat* nguoiDungPhep;
 	
 public:
-	PhepThuat() : VuKhi(), loaiPhep("Hoa"), manaTieuThu(10), nguoiDungPhep(nullptr) {}
-	PhepThuat(string ten, int st, float td, string lp = "Hoa", int mtb = 10)
-	: VuKhi(ten, st, td), loaiPhep(lp), manaTieuThu(mtb), nguoiDungPhep(nullptr) {}
+	PhepThuat(string ten = "", int st = 0 , float td = 0, string lp = "Hoa", int mtb = 10 , NhanVat* ndp = nullptr )
+	: VuKhi(ten, st, td), loaiPhep(lp), manaTieuThu(mtb), nguoiDungPhep(ndp) {}
 	PhepThuat(const PhepThuat& pt): VuKhi(pt) {
 		loaiPhep = pt.loaiPhep ;
 		manaTieuThu = pt.manaTieuThu ;
@@ -385,7 +380,7 @@ private:
 	int    viTriDangDung;   // vi tri dung vu khi
 	
 public:
-	NhanVat(string _name = "Khong ro", int _hp = 1000, int _mana = 1000, int _manaMax = 1000, int hm = 5, VuKhi** _vk = nullptr, int vt = 0)
+	NhanVat(string _name = "", int _hp = 0, int _mana = 0, int _manaMax = 0, int hm = 0, VuKhi** _vk = nullptr, int vt = 0)
 	: name(_name), hp(_hp), mana(_mana), manaMax(_manaMax), hoiMana(hm), viTriDangDung(vt) {
 		for (int i = 0; i < 3; i++)
 			vk[i] = (_vk ? _vk[i] : nullptr);
