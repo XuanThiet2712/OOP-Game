@@ -123,7 +123,7 @@ public:
 		int tongDamage = tongDan * getSatThuongCoBan(); 	// tinh toan sat thuong
 		
 		soLuongDan = dungLuongBang - danDu;
-		cout << endl << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
+		cout << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
 		cout << left << setw(28) << "	Tong so lan thay bang:" << n << endl;
 		cout << left << setw(28) << "	Dan con lai:" 			<< soLuongDan << " vien" << endl;
 		
@@ -452,7 +452,7 @@ public:
 	int HoiMana(int t) {
 		int tongHoi = hoiMana * t;
 		int truoc	= mana;
-		setMana(mana + tongHoi);
+		setMana(min(mana + tongHoi, manaMax)); // cap manaMax
 		return mana - truoc;   // tra ve so mana thuc su hoi duoc
 	}
 	// trang bi vu khi dang su dung hien tai , bao gom sung kiem phep thuat
