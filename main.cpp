@@ -499,8 +499,8 @@ public:
 		return in;
 	}
 	friend ostream& operator<<(ostream& out, NhanVat nv) {
-		out << left << setw(22) << "Ten:"  << B_WHITE  << nv.name	<< RESET << endl;
-		out << left << setw(22) << "HP:"   << B_RED  << nv.hp 		<< RESET << endl;
+		out << left << setw(12) << "Ten:"  << B_WHITE  << nv.name	<< RESET << endl;
+		out << left << setw(12) << "HP:"   << B_RED  << nv.hp 		<< RESET << endl;
 
 		out << CYAN << string(70, '=') << RESET << endl;
 		return out;
@@ -654,7 +654,7 @@ void PhepThuat::InThongTin() {
 // MENU CHINH
 void hienThiGiaoDien(NhanVat& nr, NhanVat& p) {
 	clearScreen();
-	cout << RED << BOLD << "============= MUC TIEU ==============" << RESET << "\n";
+	cout << RED << BOLD << "=========================== MUC TIEU =================================" << RESET << "\n";
 	cout << nr;
 	cout << "PLAYER: " << B_WHITE << p.getName() << RESET
 	     << " | HP: " 	<< B_RED << p.getHp() 	<< RESET
@@ -697,7 +697,7 @@ int main() {
 
 		if (lua == 1) {
 			clearScreen();
-			cout << RED << BOLD << "============= MUC TIEU ==============" << RESET << "\n";
+			cout << RED << BOLD << "=========================== MUC TIEU =================================" << RESET << "\n";
 			cout << nr;
 			cout << RED << "PLAYER: " << B_WHITE << player.getName() << RESET
 			     << " | HP: " << B_RED << player.getHp() << RESET
