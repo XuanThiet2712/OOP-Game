@@ -615,7 +615,7 @@ int PhepThuat::SatThuong(int t) {
 		cout << left << setw(28) << "	So lan CRIT (don 6):" << YELLOW << BOLD << n / 6 << " lan"  << RESET << endl;
 	} else if (loaiPhep == "Phong") {
 		int   n1      = min(manaHT / manaTieuThu, (int)(tocDo * t));
-		float nhanCuoi = (n1 > 0) ? min(1.0f + (n1 - 1) * 0.01f, 3.0f) : 1.0f;
+		float nhanCuoi = (n1 > 0) ? 1.0f + (n1 - 1) * 0.01f : 1.0f;
 		cout << left << setw(28) << "	Nhan cuoi dat duoc:"  << B_CYAN << "x" << fixed << setprecision(2) << nhanCuoi << RESET << endl;
 	} else if (loaiPhep == "Hoa") {
 		cout << left << setw(28) << "	Hieu ung thieu dot:"  << RED << "+10%/don"                  << RESET << endl;
