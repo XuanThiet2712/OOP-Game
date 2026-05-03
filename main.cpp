@@ -424,14 +424,17 @@ public:
 		return viTriDangDung;
 	}
 
-	void setName(string _name)		{
+	void setName(string _name){
 		name = _name;
 	}
-	void setHp(int _hp)				{
+	void setHp(int _hp){
 		hp    = (_hp   < 0) ? 0 : _hp;
 	}
-	void setMana(int _mana)			{
-		mana  = (_mana < 0) ? 0 : (_mana > manaMax ? manaMax : _mana);
+	void setMana(int _mana)	{
+		mana  = (_mana < 0) ;
+	}
+	void setManaMax(int _manaMax){
+		manaMax = _manaMax ; 
 	}
 	void setHoiMana(int hm)	{
 		hoiMana = (hm < 0) ? 0 : hm;
@@ -448,7 +451,7 @@ public:
 		return mana - truoc;   // tra ve so mana thuc su hoi duoc
 	}
 	// trang bi vu khi dang su dung hien tai , bao gom sung kiem phep thuat
-	void trangBiHienTai() {
+	void TrangBiHienTai() {
 		for (int i = 0; i < 3; i++) {
 			cout << B_WHITE << "[" << i + 1 << "]" << RESET ;
 			vk[i]->TanCong();
@@ -658,7 +661,7 @@ void hienThiGiaoDien(NhanVat& nr, NhanVat& p) {
 	     << " - "		<< p.getHoiMana() << " mana/s" << endl ;
 	cout << CYAN << string(70, '=') << RESET << endl;
 	cout  << "TRANG BI HIEN TAI:" << RESET << "\n";
-	p.trangBiHienTai();
+	p.TrangBiHienTai();
 	cout << "\n";
 	cout << YELLOW << BOLD << "===== Vu Khi Dang Su Dung =====" << RESET << endl;
 	p[p.getViTriDangDung()]->InThongTin();
@@ -727,7 +730,7 @@ int main() {
 			cout << RED << BOLD << "PLAYER" << RESET << "\n";
 			cout << player;
 			cout << YELLOW << BOLD << "================== DOI VU KHI ==============" << RESET << "\n";
-			player.trangBiHienTai();
+			player.TrangBiHienTai();
 			cout << "Lua chon (1-3): ";
 			int chon;
 			cin >> chon;
