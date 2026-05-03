@@ -421,8 +421,7 @@ static const char* mauPhep(const string& lp) {
 
 void PhepThuat::TanCong() {
 	const char* mau = mauPhep(loaiPhep);
-	cout << YELLOW << BOLD << "[ PHEP THUAT ]" << RESET
-	<< mau << "[ " << getTenVuKhi() << " ] " << RESET
+	cout << mau << YELLOW << BOLD << "[ PHEP THUAT ]" << RESET
 	<<CYAN<< "[ "  << getTenVuKhi()  << " ] " << RESET
 	<< " Su dung 1 nang luc tam linh ky la tan cong vao ke dich " <<endl ; 
 	
@@ -442,92 +441,11 @@ void PhepThuat::TanCong() {
 }
 
 int PhepThuat::SatThuong(int t) {
-	if (!nguoiDungPhep) return 0;
-	
-//<<<<<<< HEAD
-	int base = getSatThuongCoBan();
-	float speed = getTocDoRaDon();
-	
-	int mana = nguoiDungPhep->getMana();
-	int manaMax = nguoiDungPhep->getManaMax();
-	int regen = nguoiDungPhep->getHoiMana();
-	
-	// TÍNH SỐ HIT
-	int maxHitByTime = (int)(speed * t);
-	
-	// Mana tổng
-	int totalMana = mana + regen * t;
-	
-	int maxHitByMana = totalMana / manaTieuThu;
-	
-	int n = min(maxHitByTime, maxHitByMana);
-	
-	// TÍNH DAMAGE
-	int tongDamage = 0;
-	
-	if (loaiPhep == "Hoa") {
-		tongDamage = (int)(n * base * 1.1f);
+	if (!nguoiDungPhep) {
+		cout << RED << ">> [" << getTenVuKhi() << "] Chua gan nguoi dung phep!\n" << RESET;
+		return 0;
 	}
 	
-	else if (loaiPhep == "Loi") {
-		int cycle = n / 6;
-		int du = n % 6;
-		
-		tongDamage = cycle * (5 * base + 2 * base) + du * base;
-	}
-	
-	else if (loaiPhep == "Phong") {
-		// cấp số cộng
-		tongDamage = (int)(
-		  n * base + base * 0.01f * (n * (n - 1) / 2.0f));
-	}
-	//  CẬP NHẬT MANA
-	int manaUsed = n * manaTieuThu;
-	int manaFinal = totalMana - manaUsed;
-	
-	if (manaFinal > manaMax) manaFinal = manaMax;
-	if (manaFinal < 0) manaFinal = 0;
-	
-	nguoiDungPhep->setMana(manaFinal);
-	
-	// OUTPUT
-	cout << endl 
-	<< CYAN << BOLD 
-	<< "[Dien bien chien dau - " << t << " giay]" 
-	<< RESET << endl;
-	
-	cout << left << setw(28) 
-	<< "\tTong so don da ra:" << n << " don";
-	cout << endl;
-	
-	cout << left << setw(28) 
-	<< "\tMana con lai:" 
-	<< B_BLUE << manaFinal << "/" << manaMax << RESET << endl;
-	
-	if (loaiPhep == "Loi") {
-		cout << left << setw(28) 
-		<< "\tChu ky Loi:" 
-		<< "5 thuong + 1 crit x2" << endl;
-	}
-	else if (loaiPhep == "Phong") {
-		cout << left << setw(28) 
-		<< "\tBonus cuoi:" 
-		<< B_CYAN << "x" << fixed << setprecision(2) 
-		<< (1.0f + (n - 1) * 0.01f) 
-		<< RESET << endl;
-	}
-	else if (loaiPhep == "Hoa") {
-		cout << left << setw(28) 
-		<< "\tHieu ung:" 
-		<< RED << "+10% moi don" << RESET << endl;
-	}
-	
-	cout << BOLD << B_RED 
-	<< left << setw(28) 
-	<< "\tTong damage:" << tongDamage 
-	<< RESET << endl;
-	
-//=======
 	const int   base      = getSatThuongCoBan();
 	const float tocDo     = getTocDoRaDon();
 	const int   hoiMana1s = nguoiDungPhep->getHoiMana();
@@ -616,7 +534,6 @@ int PhepThuat::SatThuong(int t) {
 	}
 	
 	cout << BOLD << B_RED << left << setw(28) << "	Tong damage:" << tongDamage                    << RESET << endl;
-//>>>>>>> 0ed4094da7e99e8b02294a6b757db6c27114b8db
 	cout << string(70, '=') << endl;
 	cout << ">> Tran chien ket thuc, Mana con lai: " << B_BLUE << nguoiDungPhep->getMana() << "/" << manaMax << RESET << endl;
 	
