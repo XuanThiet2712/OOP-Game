@@ -609,7 +609,7 @@ int PhepThuat::SatThuong(int t) {
 	
 	cout << endl << CYAN << BOLD << "[Dien bien chien dau - " << t << " giay]" << RESET << endl;
 	cout << left << setw(28) << "	Tong so don da ra:"   << n << " don"                                   << endl;
-	cout << left << setw(28) << "	Mana tieu thu:"       << B_BLUE << n * manaTieuThu << " mana"  << RESET << endl;
+	cout << left << setw(28) << "	Tong Mana tieu thu:"       << B_BLUE << n * manaTieuThu << " mana"  << RESET << endl;
 	
 	if (loaiPhep == "Loi") {
 		cout << left << setw(28) << "	So lan CRIT (don 6):" << YELLOW << BOLD << n / 6 << " lan"  << RESET << endl;
