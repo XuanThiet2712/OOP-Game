@@ -431,7 +431,7 @@ public:
 		hp    = (_hp   < 0) ? 0 : _hp;
 	}
 	void setMana(int _mana)	{
-		mana  = (_mana < 0) ;
+		mana = (_mana < 0) ? 0 : _mana ;
 	}
 	void setManaMax(int _manaMax){
 		manaMax = _manaMax ; 
@@ -443,6 +443,11 @@ public:
 		viTriDangDung = vt;
 	}
 
+	// vu khi dang su dung
+	VuKhi*& operator[](int index) {
+		return vk[index];
+	}
+	
 	// Hoi mana trong t giay
 	int HoiMana(int t) {
 		int tongHoi = hoiMana * t;
@@ -457,10 +462,7 @@ public:
 			vk[i]->TanCong();
 		}
 	}
-	// vu khi dang su dung
-	VuKhi*& operator[](int index) {
-		return vk[index];
-	}
+
 	//sat thuong vu khi hien tai gay ra trong t giay
 	int SatThuong(int t) {
 		VuKhi* v = vk[viTriDangDung];
@@ -499,8 +501,7 @@ public:
 	friend ostream& operator<<(ostream& out, NhanVat nv) {
 		out << left << setw(22) << "Ten:"  << B_WHITE  << nv.name	<< RESET << endl;
 		out << left << setw(22) << "HP:"   << B_RED  << nv.hp 		<< RESET << endl;
-		out << left << setw(22) << "Mana:" << BLUE   << nv.mana << B_BLUE << "/" << nv.manaMax << RESET << endl;
-		out << left << setw(22) << "Hoi mana/giay:" << B_BLUE << nv.hoiMana << RESET << endl;
+
 		out << CYAN << string(70, '=') << RESET << endl;
 		return out;
 	}
