@@ -86,6 +86,10 @@ public:
 	}
 	~Sung() {}
 	
+	//getset
+//	getSoLuongDan
+//	getTocDoThayBang
+	
 	//METHOD
 	//Mo ta cach tan cong cua Sung
 	void TanCong() override {
